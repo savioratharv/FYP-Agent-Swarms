@@ -33,3 +33,6 @@ build/
 *.cache
 *.bak
 *.swp
+
+*.env
+dependency_graph.png
