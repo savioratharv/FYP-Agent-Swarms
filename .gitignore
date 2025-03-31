@@ -35,4 +35,3 @@ build/
 *.swp
 
 *.env
-dependency_graph.png

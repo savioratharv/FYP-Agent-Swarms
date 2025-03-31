@@ -1,6 +1,4 @@
 import os
-
-import os
 import ast
 import sys
 import pkg_resources
@@ -21,13 +19,20 @@ def extract_imports(file_path):
     with open(file_path, "r", encoding="utf-8") as f:
         tree = ast.parse(f.read(), filename=file_path)
 
-    imports = set()
+    imports = {}  # key: module, value: set of functions (empty set if not specified)
     for node in ast.walk(tree):
         if isinstance(node, ast.Import):
             for alias in node.names:
-                imports.add(alias.name.split(".")[0])
+                mod = alias.name.split(".")[0]
+                if mod not in imports:
+                    imports[mod] = set()  # module imported as whole; no specific functions
         elif isinstance(node, ast.ImportFrom) and node.module:
-            imports.add(node.module.split(".")[0])
+            mod = node.module.split(".")[0]
+            funcs = {alias.name for alias in node.names}
+            if mod in imports:
+                imports[mod] |= funcs
+            else:
+                imports[mod] = funcs
     
     return imports
 
@@ -61,15 +66,16 @@ def build_dependency_graph(root_dir):
 
     for file in project_files:
         file_path = os.path.join(root_dir, file)
-        imports = extract_imports(file_path)
+        imports_dict = extract_imports(file_path)
 
-        for imp in imports:
+        for imp, funcs in imports_dict.items():
             if imp in stdlib_modules or imp in installed_packages:
-
                 continue  # Ignore standard lib and third-party imports
             
             if is_internal_import(imp, project_files_set, root_dir):
-                dep_graph.add_edge(imp.replace(".", os.sep) + ".py", file)
+                parent_file = imp.replace(".", os.sep) + ".py"
+                # Add edge with attribute for imported functions (may be empty set)
+                dep_graph.add_edge(parent_file, file, imported_functions=funcs)
 
     return dep_graph
 
