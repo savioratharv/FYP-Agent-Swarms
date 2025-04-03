@@ -117,10 +117,12 @@ def process_node(node, project_root, dependencies):
     
     history.append(response.choices[0].message)
 
-    # Save the documentation
+    # Save the documentation with nested folder support
     docs_dir = os.path.join(os.getcwd(), "generated_docs")
-    os.makedirs(docs_dir, exist_ok=True)
-    doc_path = os.path.join(docs_dir, f"{node[:-3]}.md")
+    # Replace the .py extension with .md and maintain any subfolders
+    doc_path = os.path.join(docs_dir, node.replace(".py", ".md"))
+    # Ensure the parent directories exist
+    os.makedirs(os.path.dirname(doc_path), exist_ok=True)
     with open(doc_path, "w", encoding="utf-8") as f:
         f.write(response.choices[0].message.content.strip())
     
