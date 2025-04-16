@@ -1,11 +1,11 @@
-# Test Parser
+# TestParser Module
 
 ## Module Purpose
-The Test Parser module is designed to read test files, remove comments, and parse key-value pairs from the content. It supports both single-line and multi-line string values, facilitating the configuration of test cases in a structured manner. The resulting data can be utilized for automated testing frameworks, ensuring correctness and reliability in software development.
+The `TestParser` module provides functionality to parse test case files, extracting meaningful data while ignoring comments and blank lines. It facilitates the structured representation of test cases, supporting both single-line and multi-line descriptions. This module is essential for managing automated test cases in a readable and efficient manner.
 
 ## Author List
 - John DeNero: Lead Developer
-- Dan Klein: Co-Developer
+- Dan Klein: Core Designer
 - Brad Miller: Student Side Autograding Contributor
 - Nick Hay: Student Side Autograding Contributor
 - Pieter Abbeel: Student Side Autograding Contributor
@@ -15,93 +15,100 @@ The Test Parser module is designed to read test files, remove comments, and pars
 - Last Modified: 2023-10-01
 
 ## Version
-- Version: 1.0.0
+1.0.0
 
-## Dependency List
+## Dependencies
 - Python 3.6 or higher
 
 ## Public Interface Exports
-```python
-class TestParser(object)
-```
+- `TestParser`: Class for parsing test case files.
+- `emitTestDict`: Function to emit a parsed test dictionary.
 
 ## Internal Implementation Details
-- `removeComments`: Private method that removes comments from lines of text, leaving only functional code.
-- `parse`: Public method that reads a test file, processes its content, and returns a structured dictionary.
+### Class: `TestParser`
+- **Attributes:**
+  - `path (str)`: Path to the test file.
+  
+- **Methods:**
+  - `__init__(self, path)`: Initializes the `TestParser` with the given file path.
+  - `removeComments(self, rawlines)`: Removes comments from the raw lines of the test file.
+  - `parse(self)`: Parses the test file and returns a structured dictionary of test data.
+
+### Function: `emitTestDict`
+- Emits the parsed test dictionary to a specified output handle.
 
 ## Constant Definitions
-N/A
+- None defined.
 
 ## Class/Function Relationships
-- `TestParser`: Main class that contains methods to read and parse test files.
-  - `removeComments`: Method to filter out comments from the input lines.
-  - `parse`: Method to parse key-value pairs and multiline strings.
+- `TestParser` contains methods for reading and interpreting test case files.
+- `emitTestDict` operates independently, utilizing the output from the `TestParser`.
 
-## Class Documentation
+## Functions
 
-### `TestParser`
-
-#### Functionality Overview
-The `TestParser` class provides an interface to read test files and retrieve structured data while extracting useful content and removing comments. 
+### `__init__(self, path)`
+Initializes a new `TestParser` instance.
 
 #### Parameters
-- `path` (str): The file path of the test file to be parsed.
+- `path` (str): Path to the test file.
 
 #### Returns
-N/A
+- None
 
 #### Usage Example
 ```python
-parser = TestParser('path/to/testfile.txt')
-test_data = parser.parse()
+parser = TestParser("path/to/test_file")
 ```
 
-#### Exception Hierarchy Documentation
-- `SystemExit`: Raised when an error occurs during parsing.
-
-## Method Documentation
-
-### `removeComments(rawlines)`
-
-#### Functionality Overview
+### `removeComments(self, rawlines)`
 Removes comments from the provided list of raw lines.
 
 #### Parameters
-- `rawlines` (list of str): Lines of text from which comments will be removed.
+- `rawlines` (list): A list of strings representing each line from the test file.
 
 #### Returns
-- `str`: The cleaned lines as a single string with comments removed.
+- str: The cleaned lines with comments removed.
 
 #### Usage Example
 ```python
-lines = ["key: value # this is a comment", "another_key: another_value"]
-cleaned = parser.removeComments(lines)
+cleaned_lines = parser.removeComments(["line 1", "line 2 # comment"])
 ```
 
----
-
-### `parse()`
-
-#### Functionality Overview
-Reads the test file, removes comments, and parses its content into a structured dictionary.
+### `parse(self)`
+Parses the contents of the test file and generates a structured dictionary.
 
 #### Parameters
-N/A
+- None
 
 #### Returns
-- `dict`: A dictionary with parsed test data.
+- dict: A dictionary containing parsed test properties.
 
 #### Usage Example
 ```python
-test = parser.parse()
-print(test['key'])  # Output: value
+test_dict = parser.parse()
 ```
 
-#### Exception Hierarchy Documentation
-- `SystemExit`: Raised when a parsing error is detected.
+### `emitTestDict(testDict, handle)`
+Writes the contents of a given test dictionary to an output handle.
+
+#### Parameters
+- `testDict` (dict): The test dictionary to be emitted.
+- `handle`: The output handle where the test dictionary content will be written.
+
+#### Returns
+- None
+
+#### Usage Example
+```python
+with open("output.txt", "w") as f:
+    emitTestDict(test_dict, f)
+```
+
+## Exception Hierarchy Documentation
+- `Exception`: Base class for all exceptions raised in this module.
+- `SystemExit`: Raised for termination during parsing errors.
 
 ## Revision History
-
-| Date Modified | Version Delta | Change Description                     | Author Initials |
-|---------------|---------------|---------------------------------------|------------------|
-| 2023-10-01    | 1.0.0        | Initial creation of the Test Parser. | JD, DK            |
+| Date Modified | Version Delta | Change Description                        | Author Initials |
+|---------------|---------------|------------------------------------------|------------------|
+| 2023-10-01    | 1.0.0        | Initial version of the TestParser module| JD, DK           |

@@ -1,83 +1,215 @@
-# TextDisplay Module
+# Text Display Module
+
+## Project Name
+Pacman Text Display
 
 ## Module Purpose
-The `textDisplay.py` module is designed to provide a text-based display for the Pacman game, allowing users to visualize the game's state through console output. It defines classes for graphical representation, including a null graphics class for situations when visual output is not required. The module manages the rendering of game states and updates based on the player's actions and game events.
+The purpose of this module is to provide graphical output for the Pacman game. It includes classes 
+to render the game's state either in a graphical display or as text output. The module can 
+initialize the display, update it based on game state changes, and conclude the display after the game ends. 
+This functionality is essential for providing visual feedback during gameplay for debugging and educational purposes.
 
 ## Author List
-- John DeNero: Principal Developer
-- Dan Klein: Core Developer
-- Brad Miller: Autograding Implementation
-- Nick Hay: Autograding Support
-- Pieter Abbeel: Autograding Support
+- John DeNero - Lead Developer
+- Dan Klein - Lead Developer
+- Brad Miller - Student Side Autograding Development
+- Nick Hay - Student Side Autograding Development
+- Pieter Abbeel - Student Side Autograding Development
 
 ## Creation/Modification Dates
 - Creation Date: 2023-10-01
-- Last Modified Date: 2023-10-01
+- Modification Date: 2023-10-20
 
 ## Version
-- Version: 1.0.0
+1.0.0
 
 ## Dependency List
-- pacman (version >= 0.1.0)
+- pacman >= 0.1.0
 
 ## Public Interface Exports
-- `NullGraphics`
-- `PacmanGraphics`
+- `NullGraphics` class
+- `PacmanGraphics` class
 
 ## Internal Implementation Details
-- The module provides two classes, `NullGraphics` and `PacmanGraphics`, to handle rendering in different contexts. `NullGraphics` offers a placeholder for graphics when no output is desired, while `PacmanGraphics` offers functionality for rendering game state updates.
-- The module utilizes timing functions to control the refresh rate of the display.
+The module defines two primary classes: `NullGraphics` and `PacmanGraphics`. 
+`NullGraphics` serves as a placeholder that does not render any interface, while 
+`PacmanGraphics` provides functionality to display the current state of the game 
+and update it in accordance with game events.
 
 ## Constant Definitions
-- `DRAW_EVERY`: Controls the frequency of drawing updates.
-- `SLEEP_TIME`: Time in seconds to pause between updates.
-- `DISPLAY_MOVES`: Boolean to toggle displaying moves in the console.
-- `QUIET`: Boolean to suppress output.
+- `DRAW_EVERY` (int): Frequency of updates to the display.
+- `SLEEP_TIME` (int): Delay between frames in seconds; can be modified in the 
+  constructor of `PacmanGraphics`.
+- `DISPLAY_MOVES` (bool): Option to toggle displaying moves of Pacman and ghosts.
+- `QUIET` (bool): Suppresses output when set to True.
 
 ## Class/Function Relationships
-- The `PacmanGraphics` class interacts with the `state` object to obtain the current game state used for drawing.
-- The `NullGraphics` class serves as a baseline for scenarios where no graphics are needed.
+- `NullGraphics`: Designed for situations where graphical output is not required.
+- `PacmanGraphics`: Extends the functionality to handle the graphical representation 
+  of the Pacman game state, including movement updates and drawing the game state.
 
-## Class: NullGraphics
-### Overview
-Provides a placeholder graphics implementation that suppresses rendering but retains method signatures for compatibility.
+### NullGraphics Class
 
-### Methods
-- `initialize(state, isBlue=False)`: Initializes graphic settings.
-- `update(state)`: Updates the current state.
-- `checkNullDisplay()`: Returns true if the display is a null graphics.
-- `pause()`: Pauses execution for a defined period.
-- `draw(state)`: Outputs the current state to the console.
-- `updateDistributions(dist)`: No operation.
-- `finish()`: Finalizes any required processes.
-
-### Usage
 ```python
-null_graphics = NullGraphics()
-null_graphics.initialize(game_state)
-null_graphics.draw(game_state)
+class NullGraphics:
+    """
+    A class to represent a null display for the Pacman game.
+
+    This class serves as a placeholder that does not render any graphics but can 
+    be used to maintain the interface for various functions requiring a display.
+
+    Methods:
+    - initialize(state, isBlue=False): Initializes the null display.
+    - update(state): Updates the display with the current state.
+    - checkNullDisplay(): Checks if the display is a null display.
+    - pause(): Pauses execution for the defined sleep time.
+    - draw(state): Prints the state as text.
+    - updateDistributions(dist): Placeholder for updating probability distributions.
+    - finish(): Placeholder method to finalize the display.
+    """
+
+    def initialize(self, state, isBlue=False):
+        """
+        Initializes the null graphics display with the provided game state.
+
+        Parameters:
+        - state: The current state of the game.
+        - isBlue (bool): Indicates if the display is for a blue agent.
+        
+        Returns: None
+        """
+
+    def update(self, state):
+        """
+        Updates the state of the null graphics display.
+
+        Parameters:
+        - state: The current state of the game.
+
+        Returns: None
+        """
+
+    def checkNullDisplay(self):
+        """
+        Checks if this display is a null display.
+
+        Returns:
+        - bool: Always returns True.
+        """
+
+    def pause(self):
+        """
+        Pauses execution for the defined sleep time.
+
+        Returns: None
+        """
+
+    def draw(self, state):
+        """
+        Prints the current game state as text.
+
+        Parameters:
+        - state: The current state of the game.
+
+        Returns: None
+        """
+
+    def updateDistributions(self, dist):
+        """
+        Updates the display with probability distributions.
+
+        Parameters:
+        - dist: The distribution information to be displayed.
+
+        Returns: None
+        """
+
+    def finish(self):
+        """
+        Finalizes the graphics display.
+
+        Returns: None
+        """
 ```
 
-## Class: PacmanGraphics
-### Overview
-Manages the rendering of Pacman game states and accumulates scoring and game turn data.
+### PacmanGraphics Class
 
-### Methods
-- `__init__(speed=None)`: Initializes a graphical display with an optional speed parameter.
-- `initialize(state, isBlue=False)`: Prepares the display for the game state.
-- `update(state)`: Updates the graphics and prints game state based on turn and moves.
-- `pause()`: Controls the speed of the display by pausing.
-- `draw(state)`: Renders the current game state to the console.
-- `finish()`: Performs cleanup operations.
-
-### Usage
 ```python
-pacman_graphics = PacmanGraphics(speed=0.5)
-pacman_graphics.initialize(game_state)
-pacman_graphics.update(game_state)
+class PacmanGraphics:
+    """
+    A class to represent the graphical output for the Pacman game.
+
+    This class provides functionality to render the game state, 
+    update it based on player moves, and manage the drawing of 
+    the game in a graphical format.
+
+    Methods:
+    - __init__(speed=None): Initializes the graphics and sets up delay speed.
+    - initialize(state, isBlue=False): Prepares the graphics display with the initial state.
+    - update(state): Updates the graphics display based on current game state.
+    - pause(): Pauses execution for the defined sleep time.
+    - draw(state): Renders the current game state in a textual format.
+    - finish(): Finalizes and clears the display.
+    """
+
+    def __init__(self, speed=None):
+        """
+        Initializes the Pacman graphics display and sets the display speed.
+
+        Parameters:
+        - speed (int): The desired speed of the display updates in seconds.
+        
+        Returns: None
+        """
+
+    def initialize(self, state, isBlue=False):
+        """
+        Initializes the graphics display with the provided game state.
+
+        Parameters:
+        - state: The current state of the game.
+        - isBlue (bool): Indicates if the display is for a blue agent.
+        
+        Returns: None
+        """
+
+    def update(self, state):
+        """
+        Updates the graphics display according to the game state.
+
+        Parameters:
+        - state: The current state of the game.
+
+        Returns: None
+        """
+
+    def pause(self):
+        """
+        Pauses execution for the defined sleep time.
+
+        Returns: None
+        """
+
+    def draw(self, state):
+        """
+        Renders the current game state as text output.
+
+        Parameters:
+        - state: The current state of the game.
+
+        Returns: None
+        """
+
+    def finish(self):
+        """
+        Finalizes and clears the graphics display.
+
+        Returns: None
+        """
 ```
 
-## Revision History
+## Revision History Table
 | Date Modified | Version Delta | Change Description                          | Author Initials |
 |---------------|---------------|--------------------------------------------|------------------|
-| 2023-10-01    | 1.0.0        | Initial version created.                   | JD, DK           |
+| 2023-10-01    | 1.0.0         | Initial creation of the textDisplay module | JD, DK            |
+| 2023-10-20    | 1.0.1         | Added detailed docstrings and comments     | JD                |

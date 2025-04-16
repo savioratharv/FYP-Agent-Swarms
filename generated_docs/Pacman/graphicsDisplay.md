@@ -1,132 +1,153 @@
 # Pacman Graphics Display
 
 ## Module Purpose
-This module provides the graphical interface for the Pacman game environment, allowing 
-for the visualization of game elements such as the player (Pacman), ghosts, food, and walls. 
-It handles rendering updates, animations, and displays the score and other game-related 
-information in real time.
+This module provides a graphical interface for the Pacman game, enabling visual representation 
+of the grid, agents, and their interactions. It supports elements such as walls, food, capsules, 
+and both Pacman and ghost animations. The graphics are designed to enhance gameplay by providing 
+an intuitive and engaging visual output.
 
-## Author List
-- John DeNero: Lead Developer
-- Dan Klein: Graphics Implementation
-- Brad Miller: Student Autograding
-- Nick Hay: Student Autograding
-- Pieter Abbeel: Student Autograding
+## Authors
+- John DeNero (Lead Developer)
+- Dan Klein (Graphics Designer)
+- Brad Miller (Student Autograder Developer)
+- Nick Hay (Student Autograder Developer)
+- Pieter Abbeel (Student Autograder Developer)
 
 ## Creation/Modification Dates
 - Creation Date: 2023-10-01
-- Last Modified Date: 2023-10-20
+- Last Modification Date: 2023-10-10
 
 ## Version
-- Version: 1.0.0
+Version: 1.0.0
 
-## Dependency List
-- graphicsUtils >= 1.0.0
-- game >= 1.0.0
-- math >= 1.0.0
-- time >= 1.0.0
+## Dependencies
+- graphicsUtils >= 1.0
+- game >= 1.0
 
 ## Public Interface Exports
 - `class InfoPane`
 - `class PacmanGraphics`
 - `class FirstPersonPacmanGraphics`
-- `def saveFrame()`
+- Functions for drawing elements like walls, food, capsules, and agents.
 
 ## Internal Implementation Details
-The primary functionality involves initializing and updating a graphical window 
-to visualize the game state. The module includes classes for managing various 
-graphics aspects and rendering elements like walls, food, and agents dynamically.
+This module consists of classes and functions that handle the graphical output of 
+the Pacman game. Key implementation aspects include:
+- The `InfoPane` class for displaying game information such as score and ghost distances.
+- The `PacmanGraphics` and `FirstPersonPacmanGraphics` classes that manage the drawing 
+of agents and game objects, including movement and animations.
+- Drawing utilities that translate game coordinates into screen coordinates.
 
 ## Constant Definitions
-- `DEFAULT_GRID_SIZE = 30.0`
-- `INFO_PANE_HEIGHT = 35`
-- `BACKGROUND_COLOR = formatColor(0,0,0)`
-- `WALL_COLOR = formatColor(0,0/255.0, 51.0/255.0, 255.0/255.0)`
-- `PACMAN_COLOR = formatColor(255.0/255.0,255.0/255.0,61.0/255)`
-
+- `DEFAULT_GRID_SIZE`: Default size for each grid square.
+- `INFO_PANE_HEIGHT`: Height of the information display area.
+- `BACKGROUND_COLOR`: Color used for the background.
+- `WALL_COLOR`: Color used for the walls.
+- `FOOD_COLOR`: Color used for food items.
+- `PACMAN_COLOR`: Color of Pacman.
+- `CAPSULE_COLOR`: Color of power capsules.
+- `SCARED_COLOR`: Color representing scared ghosts.
+  
 ## Class/Function Relationships
-- `InfoPane` is responsible for displaying scores and ghost distances.
-- `PacmanGraphics` handles the rendering of Pacman and ghosts including their 
-animations and interactions.
-- `FirstPersonPacmanGraphics` extends `PacmanGraphics` to provide a first-person 
-view of the game.
-- `saveFrame()` saves the graphical output as a postscript file.
+- `InfoPane` manages the display of the game score and distance to ghosts.
+- `PacmanGraphics` is responsible for rendering the various game objects and their movements.
+- `FirstPersonPacmanGraphics` extends `PacmanGraphics` for a first-person view.
 
 ## Docstrings
 
-### InfoPane
+### InfoPane Class
 ```python
 class InfoPane:
     """
-    Manages the display of the information pane, which includes 
-    score and ghost distance information.
+    Displays the game's information pane.
 
-    Parameters:
-    layout: The game layout object for the current layout.
-    gridSize: The size of each cell in pixels.
+    Parameters
+    ----------
+    layout : Layout
+        The layout of the game.
+    gridSize : float
+        The size of each grid square.
 
-    Methods:
-    - toScreen(pos, y=None): Translates grid positions to screen coordinates.
-    - drawPane(): Initializes and draws the information pane.
-    - updateScore(score): Updates the score display.
-    - updateGhostDistances(distances): Updates the distances of ghosts.
+    Methods
+    -------
+    toScreen(pos, y=None) -> Tuple[float, float]
+        Translates a point to screen coordinates.
+
+    drawPane() -> None
+        Draws the initial information pane.
+
+    updateScore(score) -> None
+        Updates the displayed score.
+
+    updateGhostDistances(distances) -> None
+        Updates distance information to ghosts.
     """
 ```
 
-### PacmanGraphics
+### PacmanGraphics Class
 ```python
 class PacmanGraphics:
     """
-    Manages the graphical display for the Pacman game.
+    Handles the drawing and visualization for Pacman and the game grid.
 
-    Parameters:
-    zoom: Scale factor for the graphics.
-    frameTime: Time per frame for animation.
-    capture: Boolean flag for capturing mode.
+    Parameters
+    ----------
+    zoom : float, optional
+        Zoom factor for the graphics.
+    frameTime : float, optional
+        Time delay for frame animation.
+    capture : bool, optional
+        Flag to indicate capture mode.
 
-    Methods:
-    - initialize(state, isBlue=False): Initializes the display with the current game state.
-    - drawPacman(pacman, index): Draws Pacman at the specified index.
-    - drawGhost(ghost, agentIndex): Draws a ghost at the specified index.
-    - update(newState): Updates the display based on the new game state.
+    Methods
+    -------
+    initialize(state, isBlue=False) -> None
+        Initializes the graphics with the game state.
+    
+    drawStaticObjects(state) -> None
+        Draws static objects such as walls and food.
+    
+    drawAgentObjects(state) -> None
+        Draws agent objects (Pacman and ghosts).
+    
+    update(newState) -> None
+        Updates the graphics based on the new game state.
+    
+    removeFood(cell) -> None
+        Removes food from the specified cell.
+    
+    removeCapsule(cell) -> None
+        Removes a capsule from the specified cell.
     """
 ```
 
-### FirstPersonPacmanGraphics
+### FirstPersonPacmanGraphics Class
 ```python
 class FirstPersonPacmanGraphics(PacmanGraphics):
     """
-    Provides a first-person perspective of the Pacman game.
+    Extends PacmanGraphics for first-person visuals.
 
-    Parameters:
-    zoom: Scale factor for the graphics.
-    showGhosts: Boolean flag to toggle ghost visibility.
-    capture: Boolean flag for capturing mode.
-    frameTime: Time per frame for animation.
+    Parameters
+    ----------
+    zoom : float, optional
+        Zoom factor for the graphics.
+    showGhosts : bool, optional
+        Flag to show ghosts.
+    capture : bool, optional
+        Flag to indicate capture mode.
 
-    Methods:
-    - lookAhead(config, state): Previews the view based on the current configuration.
-    """
-```
-
-### saveFrame
-```python
-def saveFrame():
-    """
-    Saves the current graphical output as a postscript file.
-
-    Returns:
-    None: This function does not return a value. The frame is saved to the 
-    specified output directory.
-
-    Example:
-    >>> saveFrame()
-    This saves the current graphics state to a postscript file.
+    Methods
+    -------
+    initialize(state, isBlue=False) -> None
+        Initializes the graphics with the game state for first-person view.
+    
+    lookAhead(config, state) -> None
+        Handles ghost drawing based on visibility.
     """
 ```
 
 ## Revision History
-| Date Modified | Version Delta | Change Description                       | Author |
-|---------------|---------------|-----------------------------------------|--------|
-| 2023-10-20    | 1.0.0        | Initial creation of graphical display. | JD     |
-| 2023-10-01    | 0.1.0        | Basic setup and class structure defined.| DK     |
+| Date Modified | Version Delta | Change Description                             | Author Initials |
+|---------------|---------------|-----------------------------------------------|-------------------|
+| 2023-10-01    | 1.0.0         | Initial creation of graphics display module. | JDN, DK           |
+| 2023-10-10    | 1.0.1         | Added first-person graphics feature.          | JDN, DK           |

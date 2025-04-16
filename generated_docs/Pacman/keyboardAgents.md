@@ -1,95 +1,96 @@
-# Keyboard Agents
+# Pacman Keyboard Agents Documentation
+
+## Project Name
+Pacman Keyboard Agents
 
 ## Module Purpose
-This module defines keyboard-controlled agents for navigating a virtual environment, specifically in the context of the Pacman AI project. It allows user interaction through keyboard inputs, facilitating real-time gameplay adjustments. The module includes two agent classes, `KeyboardAgent` and `KeyboardAgent2`, which cater to different key mappings for user control.
+This module defines keyboard-controlled agents for navigation within the Pacman game environment. It allows users to control characters using specified keys, enabling interactive gameplay. The agents respond to key presses and execute movements while ensuring they adhere to the game's movement rules.
 
 ## Author List
-- John DeNero (Lead Developer)
-- Dan Klein (Co-Developer)
-- Brad Miller (Technical Support)
-- Nick Hay (Testing & Quality Assurance)
-- Pieter Abbeel (Research Advisor)
+- John DeNero (Project Lead)
+- Dan Klein (Co-developer)
+- Brad Miller (Contributions)
+- Nick Hay (Contributions)
+- Pieter Abbeel (Contributions)
 
 ## Creation/Modification Dates
-- Creation Date: 2023-01-15
-- Last Modified Date: 2023-10-01
+- Created: 2023-10-01
+- Last Modified: 2023-10-01
 
 ## Version
-Version: 1.0.0
+1.0.0
 
-## Dependency List
-- game (Minimum Version: 1.0.0)
-- graphicsUtils (Minimum Version: 1.0.0)
+## Dependencies
+- game (>=1.0.0)
+- graphicsUtils (>=1.0.0)
 
 ## Public Interface Exports
-- `class KeyboardAgent(Agent)`: An agent controlled via keyboard input, allowing movement in four directions and a stop command.
-- `class KeyboardAgent2(KeyboardAgent)`: A second variant of the keyboard agent with different key bindings.
+- `KeyboardAgent`: Class controlling the first player character with predefined keys.
+- `KeyboardAgent2`: Class controlling the second player character with alternative keys.
 
 ## Internal Implementation Details
-- `getAction(self, state)`: Determines the current action for the agent based on user inputs and game state.
-- `getMove(self, legal)`: Maps the pressed keys to legal movements, considering the movement directions available in the game state.
+The `KeyboardAgent` and `KeyboardAgent2` classes handle user input for character movements within the game. They process key presses, manage legal moves, and maintain the last move state to enhance movement consistency.
 
 ## Constant Definitions
-- `WEST_KEY`: Key for moving west.
-- `EAST_KEY`: Key for moving east.
-- `NORTH_KEY`: Key for moving north.
-- `SOUTH_KEY`: Key for moving south.
-- `STOP_KEY`: Key for stopping movement.
+- `WEST_KEY`: Key binding for moving west (left).
+- `EAST_KEY`: Key binding for moving east (right).
+- `NORTH_KEY`: Key binding for moving north (up).
+- `SOUTH_KEY`: Key binding for moving south (down).
+- `STOP_KEY`: Key binding for stopping movement.
 
 ## Class/Function Relationships
-- `KeyboardAgent` inherits from `Agent`.
-- `KeyboardAgent2` inherits from `KeyboardAgent`.
-- Uses external functions from the `graphicsUtils` module: `keys_waiting()` and `keys_pressed()`.
+- `KeyboardAgent`: Inherits core functionality from the `Agent` class.
+- `KeyboardAgent.getAction`: Retrieves user input and calculates the legal move based on the current game state.
+- `KeyboardAgent.getMove`: Determines the direction of movement based on pressed keys.
 
-## Class and Method Documentation
+## Class Documentation
 
-### class KeyboardAgent(Agent)
-This class defines an agent that can be controlled via keyboard inputs, allowing for simple movement in a game.
-
-#### Parameters
-- `index` (int): The index of the agent, used within the game.
+### Class KeyboardAgent
+An agent controlled by keyboard input.
 
 #### Methods
-- `getAction(state)`: Retrieves the next action based on keyboard input and game state.
-  - **Parameters**
-    - `state`: The current game state.
-  - **Returns**
-    - `str`: A string representing the action to take.
+- `__init__(self, index=0)`: Initializes the agent with default parameters.
+- `getAction(self, state)`: Determines the next action based on keyboard input and game state.
+- `getMove(self, legal)`: Calculates the move direction based on keys pressed.
 
-- `getMove(legal)`: Determines the move based on legal actions and keys pressed.
-  - **Parameters**
-    - `legal`: A list of legal actions available.
-  - **Returns**
-    - `str`: The chosen move direction.
+##### Parameters
+- `index`: An integer representing the agent's index within the game environment (default: 0).
 
-#### Example
+##### Returns
+- `str`: Direction of movement as defined in the `Directions` class.
+
+##### Usage Example
 ```python
-agent = KeyboardAgent()
-action = agent.getAction(current_game_state)
+agent = KeyboardAgent(0)
+next_action = agent.getAction(current_game_state)
 ```
+##### Exception Hierarchy
+- May raise errors related to state management or input processing as defined in the parent `Agent` class.
 
-### class KeyboardAgent2(KeyboardAgent)
-A second implementation of a keyboard-controlled agent with alternate key bindings.
+---
+
+### Class KeyboardAgent2
+A second agent controlled by the keyboard, with different key mappings.
 
 #### Methods
-- `getMove(legal)`: Same as in `KeyboardAgent` but with different key mappings.
-  - **Parameters**
-    - `legal`: A list of legal actions available.
-  - **Returns**
-    - `str`: The chosen move direction.
+- `getMove(self, legal)`: Determines movement for the second agent based on specific key bindings.
 
-#### Example
+##### Parameters
+- `legal`: A list of legal actions according to the current game state.
+
+##### Returns
+- `str`: Direction of movement as defined in the `Directions` class.
+
+##### Usage Example
 ```python
-agent = KeyboardAgent2()
-action = agent.getAction(current_game_state)
+agent2 = KeyboardAgent2()
+next_action = agent2.getAction(current_game_state)
 ```
-
-## Exception Hierarchy
-- No specific exceptions are raised; however, improper use of the agent may lead to unexpected behavior.
+##### Exception Hierarchy
+- Same as `KeyboardAgent`, with focus on managing input for the second agent.
 
 ## Revision History
 
-| Date Modified | Version Delta | Change Description                             | Author Initials |
-|---------------|---------------|------------------------------------------------|------------------|
-| 2023-01-15    | 1.0.0         | Initial creation of the KeyboardAgent module. | JD               |
-| 2023-10-01    | 1.0.1         | Added KeyboardAgent2 with different key bindings. | JD               |
+| Date Modified | Version Delta | Change Description             | Author Initials |
+|---------------|---------------|--------------------------------|------------------|
+| 2023-10-01    | 1.0.0        | Initial creation of the module | JD, DK           |

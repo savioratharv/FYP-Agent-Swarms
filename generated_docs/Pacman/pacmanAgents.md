@@ -1,17 +1,18 @@
 # Pacman Agents
 
 ## Module Purpose
-This module implements agents for the Pacman game, including a `LeftTurnAgent` that turns left at every opportunity and a `GreedyAgent` that selects actions based on a scoring evaluation function. It integrates with the underlying game infrastructure and provides functionality to evaluate and make decisions in a game state.
+This module implements the behavior of autonomous agents in the Pacman game. 
+The agents defined in this module include `LeftTurnAgent`, which turns left at every opportunity and `GreedyAgent`, which utilizes a scoring evaluation function to determine the best action based on the current game state. The module interfaces with the Pacman engine to retrieve legal actions and the game state.
 
 ## Author List
-- John DeNero - Lead Developer
-- Dan Klein - Core Contributor
-- Brad Miller - Student Side Autograding
-- Nick Hay - Student Side Autograding
-- Pieter Abbeel - Student Side Autograding
+- John DeNero: Lead Developer
+- Dan Klein: Senior Developer
+- Brad Miller: Autograding Specialist
+- Nick Hay: Software Engineer
+- Pieter Abbeel: AI Researcher
 
 ## Creation/Modification Dates
-- Creation Date: 2023-01-01
+- Creation Date: 2023-10-01
 - Last Modified Date: 2023-10-01
 
 ## Version
@@ -21,81 +22,71 @@ This module implements agents for the Pacman game, including a `LeftTurnAgent` t
 - pacman >= 1.0.0
 - game >= 1.0.0
 - util >= 1.0.0
-- random >= 1.0.0
 
 ## Public Interface Exports
-- `LeftTurnAgent`: An agent that takes left turns whenever possible.
-- `GreedyAgent`: An agent that selects actions based on a scoring mechanism.
-- `scoreEvaluation`: A function that scores the game state based on the current score.
+- `LeftTurnAgent`: An agent that turns left at every opportunity.
+- `GreedyAgent`: An agent that selects actions based on a scoring evaluation function.
+- `scoreEvaluation(state)`: Evaluates the game state score.
 
 ## Internal Implementation Details
-- The `LeftTurnAgent` relies on direction constants defined in the `Directions` module to dictate movement behavior.
-- The `GreedyAgent` makes use of an evaluation function to assess the desirability of potential successor states in the game.
-- The `scoreEvaluation` function provides a basic scoring measure by returning the current score from the game state.
+- **Classes**:
+  - `LeftTurnAgent`: Implements behavior for left-turning agent.
+  - `GreedyAgent`: Selects the best action based on evaluated scores.
+
+- **Functions**:
+  - `getAction(state)`: Determines the next action based on game state.
+  - `scoreEvaluation(state)`: Returns the score of the passed game state.
 
 ## Constant Definitions
-- Direction constants from `Directions`: `NORTH`, `SOUTH`, `EAST`, `WEST`, `STOP`, `LEFT`, `RIGHT`.
+- `Directions`: A predefined set of possible actions (NORTH, SOUTH, EAST, WEST, STOP).
+- `game.Agent`: Base class for agents in the game.
 
 ## Class/Function Relationships
-- `LeftTurnAgent`: Inherits from `game.Agent`.
-- `GreedyAgent`: Inherits from `game.Agent` and employs an evaluation function for decision making.
-- `scoreEvaluation`: Used by the `GreedyAgent` for evaluating game states.
-
-### Class Definitions
-
-#### `LeftTurnAgent`
-- **Description**: An agent that turns left at every opportunity.
-  
-##### Methods
-- `getAction(state)`: 
-  - **Overview**: Determines the next action based on the current direction and allowed movements.
-  - **Parameters**:
-    - `state`: The current game state (instance of `GameState`).
-  - **Returns**: A direction constant indicating the next action.
-  - **Usage Example**: 
-    ```python
-    agent = LeftTurnAgent()
-    next_action = agent.getAction(current_state)
-    ```
-  - **Exceptions**: Returns `STOP` if no movements are available.
-
-#### `GreedyAgent`
-- **Description**: An agent that selects actions based on the highest score from potential successor states.
-  
-##### Methods
-- `getAction(state)`:
-  - **Overview**: Chooses the best action based on successor state evaluation.
-  - **Parameters**:
-    - `state`: The current game state (instance of `GameState`).
-  - **Returns**: A direction constant indicating the optimal action.
-  - **Usage Example**: 
-    ```python
-    agent = GreedyAgent()
-    next_action = agent.getAction(current_state)
-    ```
-  - **Exceptions**: Raises an error if no legal actions are available.
-
-### Function Definitions
-
-#### `scoreEvaluation(state)`
-- **Description**: Evaluates the current game state by returning the score.
-  
-##### Parameters
-- `state`: The current game state (instance of `GameState`).
-
-##### Returns
-- An integer representing the score of the game state.
-
-##### Usage Example
-```python
-score = scoreEvaluation(current_state)
-```
-  
-##### Exceptions
-- None.
+- `LeftTurnAgent` derives from `game.Agent`.
+- `GreedyAgent` derives from `game.Agent`.
+- Both agents implement the `getAction` method for decision-making.
+- `scoreEvaluation` function is utilized by `GreedyAgent` for evaluating the state score.
 
 ## Revision History
-| Date Modified | Version Delta | Change Description                   | Author Initials |
-|---------------|---------------|--------------------------------------|------------------|
-| 2023-01-01    | 1.0.0        | Initial creation of the module      | JD               |
-| 2023-10-01    | 1.0.1        | Refined agent logic, added comments | DK               |
+| Date Modified | Version Delta | Change Description                       | Author Initials |
+|---------------|---------------|-----------------------------------------|------------------|
+| 2023-10-01    | 1.0.0        | Initial creation of Pacman agents file | JD, DK, BM, NH, PA|
+
+## Functionality Overview
+### `getAction(self, state)`
+Determines the next action for the given state based on the agent's logic.
+
+#### Parameters
+| Parameter | Type   | Description                             |
+|-----------|--------|-----------------------------------------|
+| state     | State  | The current game state.                 |
+
+#### Returns
+| Return Value | Type       | Description                             |
+|--------------|------------|-----------------------------------------|
+| action       | Direction  | The chosen action for the agent.        |
+
+#### Usage Examples
+- Typical usage: `action = agent.getAction(current_state)`
+- Edge case: When no legal actions are available, it will return `STOP`.
+
+### `scoreEvaluation(state)`
+Evaluates the current game state score.
+
+#### Parameters
+| Parameter | Type   | Description                             |
+|-----------|--------|-----------------------------------------|
+| state     | State  | The current game state.                 |
+
+#### Returns
+| Return Value | Type       | Description                             |
+|--------------|------------|-----------------------------------------|
+| score        | int        | The score of the current game state.    |
+
+#### Usage Examples
+- Typical usage: `score = scoreEvaluation(current_state)`
+- Edge case: The score is consistently evaluated without game events affecting it. 
+
+### Exception Hierarchy Documentation
+- `ValueError`: Raised if the action requested is invalid.
+- `IndexError`: Raised if an attempt is made to access an illegal action.

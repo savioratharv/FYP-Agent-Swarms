@@ -6,6 +6,8 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from create_graph import build_dependency_graph, visualize_dependency_graph
 from level_segregation import segregate_levels
 import multiprocessing
+import ast
+import astor
 
 def extract_text_from_file(file_path):
     try:
@@ -74,89 +76,28 @@ def process_node(node, project_root, dependencies):
             functions[func] = node_function_summaries[node][func]
         
         prompt = f"""{file_content}
-        Generate comprehensive Python file documentation following IEEE 1016 and GNU coding standards. Include:
+        Generate comprehensive Python file documentation following IEEE 1016 and GNU coding standards.
 
-        1. File header with:
-        - Project name in title case
-        - Module purpose (50-100 words)
-        - Author list with roles
-        - Creation/modification dates (ISO 8601)
-        - Version using semantic versioning
-        - Dependency list with minimum versions
-
-        2. Section headers for:
-        - Public interface exports
-        - Internal implementation details
-        - Constant definitions
-        - Class/funcion relationships
-
-        3. Docstrings following PEP 257 with:
-        - Functionality overview
-        - Parameter/return value tables
-        - Usage examples with edge cases
-        - Exception hierarchy documentation
-
-        4. Revision history table containing:
-        - Date modified
-        - Version delta
-        - Change description
-        - Author initials
-
-        Format using Markdown-style sectioning without markdown syntax. Maintain 80-character line width.
         Use clear, concise language and consistent terminology. Avoid jargon and abbreviations. Provide context where necessary.
+       
         Since this code file is part of a larger software project, the functions used may be defined in other files or dependencies. Here is a list of functions that have been defined outside the current code file and their summaries:
         {functions}
         Use these summaries to help you understand the context of the current file.
-        generate a markdown documentation for this current file: {node}. Return only the markdown part 
-        of the documentation. Do not include any other text or explanation. No ''''markdown tag or anything."""
+        
+        generate documentation for this current file: {node}. Return only the documentation text and nothing else.
+        
+        NO MARKDOWN TAGS OR ANYTHING ELSE."""
     
     else:
     # Create documentation for the current node file
         prompt = f"""{file_content}
-        You are a technical writer tasked with creating code documentation for this particular 
-        code file in the Engineering department of a technology/software company. 
-        Write a function-by-function overview explaining key tasks, purpose, and aspects, and defining 
-        segments of each function. Follow consistent formatting, use clear and concise language, provide context 
-        where necessary. Keep in mind, that this code file is a part of a much larger software project.
-        Since this code file is part of a larger software project, the functions used may be defined in other 
-        files or dependencies. 
-        generate a markdown documentation for this current file: {node}. Return only the markdown part 
-        of the documentation. Do not include any other text or explanation. No ''''markdown tag or anything."""
+        Generate comprehensive Python file documentation following IEEE 1016 and GNU coding standards.
 
-        prompt = f"""{file_content}
-        Generate comprehensive Python file documentation following IEEE 1016 and GNU coding standards. Include:
-
-        1. File header with:
-        - Project name in title case
-        - Module purpose (50-100 words)
-        - Author list with roles
-        - Creation/modification dates (ISO 8601)
-        - Version using semantic versioning
-        - Dependency list with minimum versions
-
-        2. Section headers for:
-        - Public interface exports
-        - Internal implementation details
-        - Constant definitions
-        - Class/funcion relationships
-
-        3. Docstrings following PEP 257 with:
-        - Functionality overview
-        - Parameter/return value tables
-        - Usage examples with edge cases
-        - Exception hierarchy documentation
-
-        4. Revision history table containing:
-        - Date modified
-        - Version delta
-        - Change description
-        - Author initials
-
-        Format using Markdown-style sectioning without markdown syntax. Maintain 80-character line width.
         Use clear, concise language and consistent terminology. Avoid jargon and abbreviations. Provide context where necessary.
 
-        generate a markdown documentation for this current file: {node}. Return only the markdown part 
-        of the documentation. Do not include any other text or explanation. No ''''markdown tag or anything."""
+        generate documentation for this current file: {node}. Return only the documentation text and nothing else.
+        
+        NO MARKDOWN TAGS OR ANYTHING ELSE."""
     
 
     history = [
@@ -175,15 +116,61 @@ def process_node(node, project_root, dependencies):
     
     history.append(response.choices[0].message)
 
-    # Save the documentation with nested folder support
-    docs_dir = os.path.join(os.getcwd(), "generated_docs")
-    # Replace the .py extension with .md and maintain any subfolders
-    doc_path = os.path.join(docs_dir, node.replace(".py", ".md"))
-    # Ensure the parent directories exist
-    os.makedirs(os.path.dirname(doc_path), exist_ok=True)
-    with open(doc_path, "w", encoding="utf-8") as f:
-        f.write(response.choices[0].message.content.strip())
+    overall_doc = response.choices[0].message.content.strip()
+    # Convert overall documentation into a comment block
+    overall_doc_comment = "\n".join([f"# {line}" for line in overall_doc.splitlines()])
+
+    def generate_docstring(func_node):
+        """Generate a basic docstring for a function node."""
+        func_name = func_node.name
+        func_prompt = (
+                f"For the file {node}, generate a Python docstring for the function '{func_name}' that explains its purpose, "
+                f"lists all parameters with types and descriptions, specifies the return value, and provides a usage example. "
+                f"Follow PEP 257 standards and return only the docstring text."
+            )
+        history.append({
+                    "role": "user",
+                    "content": func_prompt
+                })
+        response_func = client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=history
+        )
+        history.append(response_func.choices[0].message)
+        doc = f'"""{response_func.choices[0].message.content.strip()}"""'
+        return doc
+
+    class DocstringInserter(ast.NodeTransformer):
+        def visit_FunctionDef(self, node):
+            self.generic_visit(node)
+            # Check if the function already has a docstring
+            if not (node.body and isinstance(node.body[0], ast.Expr) and isinstance(node.body[0].value, ast.Str)):
+                # No docstring, so create one
+                docstring = generate_docstring(node)
+                # Create a new node for the docstring and insert it at the start of the function body
+                doc_node = ast.Expr(value=ast.Str(s=docstring.strip('"""')))
+                node.body.insert(0, doc_node)
+            return node
+
+    def insert_docstrings(source_code):
+        tree = ast.parse(source_code)
+        tree = DocstringInserter().visit(tree)
+        # Optionally fix the missing locations (only needed if you plan to use this AST further)
+        ast.fix_missing_locations(tree)
+        return astor.to_source(tree)
     
+    file_content = extract_text_from_file(full_path)
+    
+    updated_source = insert_docstrings(file_content)
+
+    final_source = overall_doc_comment + "\n\n" + updated_source
+    
+    with open(full_path, "w", encoding="utf-8") as file:
+        file.write(final_source)
+
+    print("Documentation generation completed for file:", node)
+
+    print("Starting to look for dependencies of file:", node)    
     # Find parents in the dependency graph that depend on the current node.
     # For example, given Dependencies: {'task_manager.py': {'storage.py': {'load_tasks', 'save_tasks'}, ...}, ...}
     dependents = {}  # { parent_node: set(functions) }
@@ -191,6 +178,7 @@ def process_node(node, project_root, dependencies):
         if node in child_mapping:
             dependents[parent_node] = child_mapping[node]
     
+    print("Adding function summaries for dependents of file:", node)
     # For every parent dependent, query the agent for a summary of each used function.
     if dependents:
         for parent, functions in dependents.items():
@@ -215,6 +203,7 @@ def process_node(node, project_root, dependencies):
                 node_function_summaries[parent] = func_summaries_for_parent
             else:
                 node_function_summaries[parent].update(func_summaries_for_parent)
+
 
     return f"Processed {node}"
 

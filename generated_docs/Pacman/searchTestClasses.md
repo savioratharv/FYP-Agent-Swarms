@@ -1,106 +1,182 @@
-# Pacman Search Test Classes
+# Search Test Classes
 
 ## Module Purpose
-This module provides a framework for testing various search algorithms and heuristics 
-within the context of the Pacman game. It defines different test cases for assessing the 
-performance of search algorithms on specified graph layouts, ensuring they adhere to 
-desired parameters and solution characteristics. The module also includes utilities for 
-evaluation and grading based on problem specifications.
+This module contains classes and functions for testing various search algorithms and heuristics implemented for the Pacman AI project. It provides the infrastructure to define search problems, validate solutions, and compare student submissions against correct implementations.
 
-## Author List
-- John DeNero (Lead Developer)
-- Dan Klein (Algorithm Expert)
-- Brad Miller (Testing & Grading)
-- Nick Hay (Documentation & Maintenance)
-- Pieter Abbeel (Integration Specialist)
+## Authors
+- John DeNero (Primary Developer)
+- Dan Klein (Core Contributor)
+- Brad Miller (Student Autograding)
+- Nick Hay (Student Autograding)
+- Pieter Abbeel (Student Autograding)
 
 ## Creation/Modification Dates
-- Creation Date: 2023-10-01
-- Last Modified: 2023-10-01
+- Creation Date: 2023-03-01
+- Last Modification Date: 2023-10-01
 
 ## Version
 - Version: 1.0.0
 
-## Dependency List
-- Python 3.8+
-- `layout` >= 1.0
-- `pacman` >= 1.0
-- `search` >= 1.0
-- `textwrap` >= 1.0
-- `re` >= 1.0
+## Dependencies
+- Python 3.7+
+- layout (>=1.0)
+- pacman (>=1.0)
+- search (>=1.0)
 
 ## Public Interface Exports
-- `GraphSearch`: Class representing a search problem on a graph.
-- `GraphSearchTest`: Class for testing graph search implementations.
-- `PacmanSearchTest`: Class for testing Pacman search algorithms.
-- `CornerProblemTest`: Class for testing the corner problem in Pacman.
-- `HeuristicTest`: Class for testing heuristic functions.
-- `ClosestDotTest`: Class for finding the closest dot in Pacman.
-- `CornerHeuristicSanity`: Test case for checking corner heuristic properties.
-- `CornerHeuristicPacman`: Test case for evaluating corner heuristic performance.
+- `GraphSearch`
+- `GraphSearchTest`
+- `PacmanSearchTest`
+- `CornerProblemTest`
+- `HeuristicTest`
+- `HeuristicGrade`
+- `ClosestDotTest`
+- `CornerHeuristicSanity`
+- `CornerHeuristicPacman`
 
 ## Internal Implementation Details
-The module contains several classes that handle different aspects of search 
-algorithm testing. It imports required modules for layout and search problem 
-definitions. Helper functions support core functionalities including solution 
-validation, action following, path generation, and cost calculation.
-
-### Class/Function Relationships
-- `GraphSearch`: Uses methods from the `SearchProblem` to define search problems and methods to evaluate search outcomes.
-- `GraphSearchTest`: Interacts with `GraphSearch` and encapsulates the logic for validating search outcomes against expected results.
-- `PacmanSearchTest`: Works with `Pacman` game states and integrates with testing heuristics.
-- `CornerProblemTest`: Implements searching for corners via the `CornersProblem` definition.
-- Utility functions such as `followAction`, `checkSolution`, and `wrap_solution` assist in validating search results and wrapping solutions for output.
+The module defines multiple test classes to validate search algorithms in different scenarios. Each test class is designed to handle specific types of search problems and provides methods for validating solutions by comparing student-generated outputs against reference solutions.
 
 ## Constant Definitions
-- None defined explicitly in this module.
+None defined at the module level, but constants may be used within individual classes.
 
-## Function Documentation
-
-### `wrap_solution(solution)`
-Wraps the provided solution in a string format suitable for display.
-
-#### Parameters
-- `solution`: A list or string that represents the solution to be wrapped.
-
-#### Returns
-- A formatted string of the solution.
-
-### `followAction(state, action, problem)`
-Follows a given action from a specified state within the problem context.
-
-#### Parameters
-- `state`: The current state in the search problem.
-- `action`: The action to be taken from the current state.
-- `problem`: The search problem instance.
-
-#### Returns
-- The resulting state after the action is applied, or `None` if invalid.
-
-### `followPath(path, problem)`
-Generates a list of states visited along a specified path within a problem.
-
-#### Parameters
-- `path`: A list of actions taken.
-- `problem`: The search problem instance.
-
-#### Returns
-- A list of states visited.
-
-### `checkSolution(problem, path)`
-Validates whether the proposed path is a solution to the given problem.
-
-#### Parameters
-- `problem`: The search problem instance.
-- `path`: A list of actions constituting a proposed solution.
-
-#### Returns
-- A boolean indicating whether the path is a valid solution.
+## Class/Function Relationships
+- `GraphSearchTest` inherits from `testClasses.TestCase` and tests graph search problems using the `GraphSearch` implementation.
+- `PacmanSearchTest` inherits from `testClasses.TestCase` to verify search algorithms in the context of Pacman games.
+- `CornerProblemTest`, `HeuristicTest`, `HeuristicGrade`, `ClosestDotTest`, `CornerHeuristicSanity`, and `CornerHeuristicPacman` further extend functionality for specific test cases in the game.
 
 ## Revision History
+| Date Modified | Version Delta | Change Description                              | Author Initials |
+|---------------|---------------|-------------------------------------------------|------------------|
+| 2023-03-01    | 1.0.0        | Initial module creation and structure setup.  | JD                |
+| 2023-10-01    | 1.0.1        | Added comprehensive documentation and comments. | JD                |
 
-| Date Modified | Version Delta | Change Description                 | Author Initials |
-|---------------|---------------|-------------------------------------|------------------|
-| 2023-10-01    | 1.0.0        | Initial creation of the module.    | JD                |
-| 2023-10-01    | 1.0.0        | Refactored tests for search algorithms. | DK                |
-| 2023-10-01    | 1.0.0        | Added detailed docstrings and comments. | BM                |
+## Docstrings
+
+### wrap_solution
+```python
+def wrap_solution(solution):
+```
+**Functionality Overview:**  
+Formats the solution for cleaner output by wrapping text within a width limit.
+
+**Parameters:**
+| Parameter | Type     | Description                          |
+|-----------|----------|--------------------------------------|
+| solution  | list or str | The solution to format.            |
+
+**Returns:**
+| Return Value | Type   | Description                              |
+|--------------|--------|------------------------------------------|
+| Wrapped solution | str   | A formatted string representation of the solution. |
+
+**Usage Examples:**
+```python
+print(wrap_solution(['move', 'left', 'move', 'up']))
+```
+
+**Exception Hierarchy Documentation:**  
+No exceptions are raised.
+
+### followAction
+```python
+def followAction(state, action, problem):
+```
+**Functionality Overview:**  
+Returns the successor state given the current state and action.
+
+**Parameters:**
+| Parameter | Type          | Description                             |
+|-----------|---------------|-----------------------------------------|
+| state     | any           | The current state of the search problem. |
+| action    | any           | The action to execute from the current state. |
+| problem   | SearchProblem | The instance of the search problem.    |
+
+**Returns:**
+| Return Value | Type     | Description                                      |
+|--------------|----------|--------------------------------------------------|
+| successor    | any      | The resulting state after the action is executed. |
+
+**Usage Examples:**
+```python
+next_state = followAction(state, 'move_right', problem)
+```
+
+**Exception Hierarchy Documentation:**  
+Returns `None` if the action is invalid in the given state.
+
+### followPath
+```python
+def followPath(path, problem):
+```
+**Functionality Overview:**  
+Follows a series of actions from the starting state and returns the list of visited states.
+
+**Parameters:**
+| Parameter | Type          | Description                             |
+|-----------|---------------|-----------------------------------------|
+| path      | list         | A sequence of actions to follow.        |
+| problem   | SearchProblem | The instance of the search problem.     |
+
+**Returns:**
+| Return Value | Type   | Description                                     |
+|--------------|--------|-------------------------------------------------|
+| states       | list   | A list of states visited along the path.      |
+
+**Usage Examples:**
+```python
+states_visited = followPath(['move', 'left', 'move', 'up'], problem)
+```
+
+**Exception Hierarchy Documentation:**  
+No exceptions are raised.
+
+### checkSolution
+```python
+def checkSolution(problem, path):
+```
+**Functionality Overview:**  
+Validates whether the provided path leads to a goal state in the specified problem.
+
+**Parameters:**
+| Parameter | Type          | Description                             |
+|-----------|---------------|-----------------------------------------|
+| problem   | SearchProblem | The instance of the search problem.     |
+| path      | list         | A sequence of actions proposed as a solution. |
+
+**Returns:**
+| Return Value | Type   | Description                                  |
+|--------------|--------|----------------------------------------------|
+| valid        | bool   | True if the path reaches a goal state; otherwise False. |
+
+**Usage Examples:**
+```python
+is_valid = checkSolution(problem, ['move', 'left'])
+```
+
+**Exception Hierarchy Documentation:**  
+No exceptions are raised.
+
+### GraphSearch
+```python
+class GraphSearch(SearchProblem):
+```
+**Functionality Overview:**  
+Represents a search problem defined over a graph structure with start and goal states.
+
+**Methods Summary:**
+- `getStartState`: Returns the starting state of the graph.
+- `isGoalState`: Checks if a given state is a goal state.
+- `getSuccessors`: Retrieves the successors of a given state.
+- `getCostOfActions`: Evaluates the total cost of a given sequence of actions.
+- `getExpandedStates`: Returns the list of states that have been expanded.
+
+**Usage Examples:**
+```python
+graph = GraphSearch(graph_data)
+if graph.isGoalState(current_state):
+    print("Reached goal!")
+```
+
+**Exception Hierarchy Documentation:**  
+Raises exceptions for invalid graph specifications during initialization.

@@ -1,96 +1,120 @@
-# Pacman Game Documentation
-
-## Project Name
-Pacman
+# Pacman
 
 ## Module Purpose
-The Pacman module encapsulates the logic for the classic Pacman game along with functionalities to manage the game state, actions, and rules governing the interactions between Pacman and ghosts. It serves as a foundation for implementing various agent behaviors and provides a framework for running the game through a command line interface.
+The Pacman module contains the implementation of the classic Pacman game, including strategies for player and ghost interactions. It allows for game control, state management, and interaction between the Pacman and ghost entities, enabling a functional gaming experience. This module serves as the main interface for running the game and managing gameplay rules.
 
 ## Author List
-- John DeNero (Lead Developer)
-- Dan Klein (Co-Developer)
-- Brad Miller (Student Side Autograder)
-- Nick Hay (Student Side Autograder)
-- Pieter Abbeel (Student Side Autograder)
+- John DeNero: Lead Developer
+- Dan Klein: Co-Developer
+- Brad Miller: Student-side Autograder
+- Nick Hay: Student-side Autograder
+- Pieter Abbeel: Student-side Autograder
 
 ## Creation/Modification Dates
-- Creation Date: 2023-10-02
-- Last Modified Date: 2023-10-02
+- Creation Date: 2020-10-01
+- Last Modified Date: 2023-10-01
 
 ## Version
-1.0.0
+Version: 1.0.0
 
 ## Dependency List
-- Python >= 3.8
-- util
-- game
-- layout
+- Python (>= 3.6)
+- game (>= 1.0.0)
+- util (>= 1.0.0)
+- layout (>= 1.0.0)
 
 ## Public Interface Exports
-- GameState: Class managing the game state and actions.
-- ClassicGameRules: Class managing the game rules and flow.
-- PacmanRules: Class governing Pacman's actions and interactions.
-- GhostRules: Class dictating ghost behavior and interactions.
+- Class: `GameState`
+- Class: `ClassicGameRules`
+- Class: `PacmanRules`
+- Class: `GhostRules`
+- Function: `runGames()`
+- Function: `replayGame()`
+- Function: `readCommand()`
+- Function: `loadAgent()`
 
 ## Internal Implementation Details
-The Pacman module comprises several classes, each responsible for a specific aspect of the game:
-- `GameState`: Represents the full game state, encapsulating information about food, capsules, and agent configurations.
-- `ClassicGameRules`: Controls the rule mechanics of the game, managing the start and end conditions.
-- `PacmanRules` and `GhostRules`: Contain methods for legal actions, state updates, and interactions specific to Pacman and ghosts.
+The internal implementation involves several classes and methods that govern the game mechanics, state transitions, and rules based on several interactions between Pacman and the ghosts. The game state interacts with the GameStateData object to track food, scores, agents, and the game layout.
 
 ## Constant Definitions
-- `SCARED_TIME`: The duration ghosts remain scared after consuming a power capsule (40 moves).
-- `COLLISION_TOLERANCE`: The maximum distance at which a ghost can collide with Pacman (0.7 units).
-- `TIME_PENALTY`: Points deducted for not making a move (1 point).
+- `SCARED_TIME`: Duration for which ghosts remain scared after consuming a capsule.
+- `COLLISION_TOLERANCE`: Maximum distance for a ghost to collide with Pacman.
+- `TIME_PENALTY`: Point penalty incurred for idle moves.
 
 ## Class/Function Relationships
-- `GameState`: Utilizes `GameStateData` for storing the game data, includes methods to access and manipulate agent states.
-- `ClassicGameRules`: Interfaces with `PacmanRules` and `GhostRules` to apply specific rules during gameplay.
-- `PacmanRules`: Requires functions from `Actions`, `nearestPoint`, and `manhattanDistance` to manage movement and interactions.
-- `GhostRules`: Similar to `PacmanRules`, relies on external functions to dictate ghost behavior.
+- The `GameState` class manages the overall state of the game, including food, capsules, and agent configurations.
+- The `ClassicGameRules` class encapsulates the game flow logic, determining the start and end conditions.
+- The `PacmanRules` class defines the interaction mechanism for Pacman, including movement and food consumption.
+- The `GhostRules` class outlines ghost behavior, including legal moves and interactions with Pacman.
 
 ## Revision History
-| Date Modified | Version Delta | Change Description                                      | Author Initials |
-|---------------|---------------|--------------------------------------------------------|------------------|
-| 2023-10-02    | 1.0.0        | Initial creation of the Pacman game module.           | JD, DK            |
-|               |               |                                                        |                  |
 
-## Class and Function Documentation
+| Date Modified | Version Delta | Change Description                | Author Initials |
+|---------------|---------------|-----------------------------------|------------------|
+| 2023-10-01    | 1.0.0        | Initial release of the file.     | JD, DK           | 
 
-### GameState
-Represents the full state of the game. Handles food, capsules, ghost states, and scoring.
+## Documentation for Classes and Functions
 
-#### Methods
-- `getLegalActions(agentIndex=0)`: Returns the legal actions available to the specified agent.
-- `generateSuccessor(agentIndex, action)`: Generates a successor game state after the specified agent takes the action.
-- `getNumAgents()`: Returns the total number of agents in the game.
+### Class `GameState`
+The `GameState` class specifies the full game state, including agents, food, and scores. It provides methods for accessing state data and generating successor states.
 
-### ClassicGameRules
-Manages the rules and flow of the game.
+#### Methods Overview
+- `__init__(self, prevState=None)`: Initializes a game state from a previous state or creates a new one.
+- `generateSuccessor(self, agentIndex, action)`: Generates a new state by applying the specified action of the specified agent.
+  
+#### Parameter/Return Value Table
+| Parameter     | Type       | Description                                |
+|---------------|------------|--------------------------------------------|
+| prevState     | `GameState`| Previous game state for initialization.    |
+| agentIndex    | `int`     | Index of the agent whose action to apply.  |
+| action        | `str`     | The action to apply for generating a state. |
 
-#### Methods
-- `newGame(layout, pacmanAgent, ghostAgents, display, quiet=False, catchExceptions=False)`: Initializes a new game state.
-- `process(state, game)`: Checks if the game has been won or lost and processes the outcome.
+### Class `ClassicGameRules`
+The `ClassicGameRules` class encapsulates the game rules and process flow including win/lose conditions.
 
-### PacmanRules
-Governs Pacman's interactions and movements within the game.
+#### Methods Overview
+- `newGame(self, layout, pacmanAgent, ghostAgents, display, quiet=False, catchExceptions=False)`: Initializes a new game state based on the provided parameters.
 
-#### Methods
-- `getLegalActions(state)`: Returns a list of possible actions for Pacman.
-- `applyAction(state, action)`: Updates the game state based on the action taken by Pacman.
-- `consume(position, state)`: Modifies the state by removing food or capsules when consumed.
+#### Parameter/Return Value Table
+| Parameter            | Type       | Description                                |
+|----------------------|------------|--------------------------------------------|
+| layout               | `Layout`   | The game layout to be used.                |
+| pacmanAgent          | `Agent`    | The agent object managing Pacman.          |
+| ghostAgents          | `List[Agent]` | List of ghost agent objects.            |
+| display              | `Display`  | The display object for the game.           |
+| quiet                | `bool`     | If true, skips outputs and displays.       |
+| catchExceptions      | `bool`     | If true, enables exception handling.       |
 
-### GhostRules
-Dictates the behavior and interactions of ghosts in the game.
+### Class `PacmanRules`
+The `PacmanRules` class manages the actions and interactions specific to the Pacman character.
 
-#### Methods
-- `getLegalActions(state, ghostIndex)`: Returns the legal actions available to the specified ghost.
-- `applyAction(state, action, ghostIndex)`: Updates the state based on the ghost's action.
-- `checkDeath(state, agentIndex)`: Checks if Pacman has been killed by a ghost.
+#### Methods Overview
+- `getLegalActions(state)`: Returns a list of legal actions for Pacman.
+- `applyAction(state, action)`: Updates the state based on the action taken by Pacman.
 
-## Exception Hierarchy Documentation
-- `Exception`: Base class for exceptions raised in the module.
-- `Illegal action Exception`: Raised when an illegal action is attempted by an agent.
-- `Invalid index Exception`: Raised when an invalid index is passed to a ghost state query. 
+### Class `GhostRules`
+The `GhostRules` class outlines the behavior and rules governing ghost actions.
 
-This documentation provides an overview and detailed reference for the Pacman module, including its design, functionalities, and usage.
+#### Methods Overview
+- `getLegalActions(state, ghostIndex)`: Returns legal actions for a specified ghost.
+- `applyAction(state, action, ghostIndex)`: Applies the specified action for the ghost, updating the state accordingly.
+
+### Utility Functions
+#### Function `manhattanDistance`
+Calculates the Manhattan distance between two points in a 2D grid.
+
+- **Parameter**: 
+  - xy1: Tuple of coordinates (x1, y1).
+  - xy2: Tuple of coordinates (x2, y2).
+  
+- **Returns**: 
+  - int: The Manhattan distance between the two points.
+
+#### Function `nearestPoint`
+Finds the nearest grid point to a given position by rounding the coordinates.
+
+- **Parameter**: 
+  - pos: Tuple of continuous coordinates (x, y).
+  
+- **Returns**: 
+  - Tuple: Nearest grid coordinates (rounded_x, rounded_y).
