@@ -8,6 +8,7 @@ from level_segregation import segregate_levels
 import multiprocessing
 import ast
 import astor
+import time
 
 def extract_text_from_file(file_path):
     try:
@@ -138,6 +139,7 @@ def process_node(node, project_root, dependencies):
         )
         history.append(response_func.choices[0].message)
         doc = f'"""{response_func.choices[0].message.content.strip()}"""'
+        time.sleep(10)
         return doc
 
     class DocstringInserter(ast.NodeTransformer):
@@ -199,6 +201,7 @@ def process_node(node, project_root, dependencies):
                 history.append(response_func.choices[0].message)
                 summary_text = response_func.choices[0].message.content.strip()
                 func_summaries_for_parent[func] = summary_text
+                time.sleep(10)
             if node_function_summaries.get(parent) is None:
                 node_function_summaries[parent] = func_summaries_for_parent
             else:
@@ -235,6 +238,8 @@ def main():
             for future in as_completed(futures):
                 print(future.result())
         print(f"Completed processing level {level}.")
+        print("Agents sleeping for 60 seconds to avoid rate limits.")
+        time.sleep(60)
 
 if __name__ == "__main__":
     main()
