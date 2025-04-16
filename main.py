@@ -74,14 +74,37 @@ def process_node(node, project_root, dependencies):
             functions[func] = node_function_summaries[node][func]
         
         prompt = f"""{file_content}
-        You are a technical writer tasked with creating code documentation for this particular 
-        code file in the Engineering department of a technology/software company. 
-        Write a function-by-function overview explaining key tasks, purpose, and aspects, and defining 
-        segments of each function. Follow consistent formatting, use clear and concise language, provide context 
-        where necessary. Keep in mind, that this code file is a part of a much larger software project.
-        Since this code file is part of a larger software project, the functions used may be defined in other 
-        files or dependencies. Here is a list of functions that have been defined outside the current codefile 
-        and their summaries:
+        Generate comprehensive Python file documentation following IEEE 1016 and GNU coding standards. Include:
+
+        1. File header with:
+        - Project name in title case
+        - Module purpose (50-100 words)
+        - Author list with roles
+        - Creation/modification dates (ISO 8601)
+        - Version using semantic versioning
+        - Dependency list with minimum versions
+
+        2. Section headers for:
+        - Public interface exports
+        - Internal implementation details
+        - Constant definitions
+        - Class/funcion relationships
+
+        3. Docstrings following PEP 257 with:
+        - Functionality overview
+        - Parameter/return value tables
+        - Usage examples with edge cases
+        - Exception hierarchy documentation
+
+        4. Revision history table containing:
+        - Date modified
+        - Version delta
+        - Change description
+        - Author initials
+
+        Format using Markdown-style sectioning without markdown syntax. Maintain 80-character line width.
+        Use clear, concise language and consistent terminology. Avoid jargon and abbreviations. Provide context where necessary.
+        Since this code file is part of a larger software project, the functions used may be defined in other files or dependencies. Here is a list of functions that have been defined outside the current code file and their summaries:
         {functions}
         Use these summaries to help you understand the context of the current file.
         generate a markdown documentation for this current file: {node}. Return only the markdown part 
@@ -97,6 +120,41 @@ def process_node(node, project_root, dependencies):
         where necessary. Keep in mind, that this code file is a part of a much larger software project.
         Since this code file is part of a larger software project, the functions used may be defined in other 
         files or dependencies. 
+        generate a markdown documentation for this current file: {node}. Return only the markdown part 
+        of the documentation. Do not include any other text or explanation. No ''''markdown tag or anything."""
+
+        prompt = f"""{file_content}
+        Generate comprehensive Python file documentation following IEEE 1016 and GNU coding standards. Include:
+
+        1. File header with:
+        - Project name in title case
+        - Module purpose (50-100 words)
+        - Author list with roles
+        - Creation/modification dates (ISO 8601)
+        - Version using semantic versioning
+        - Dependency list with minimum versions
+
+        2. Section headers for:
+        - Public interface exports
+        - Internal implementation details
+        - Constant definitions
+        - Class/funcion relationships
+
+        3. Docstrings following PEP 257 with:
+        - Functionality overview
+        - Parameter/return value tables
+        - Usage examples with edge cases
+        - Exception hierarchy documentation
+
+        4. Revision history table containing:
+        - Date modified
+        - Version delta
+        - Change description
+        - Author initials
+
+        Format using Markdown-style sectioning without markdown syntax. Maintain 80-character line width.
+        Use clear, concise language and consistent terminology. Avoid jargon and abbreviations. Provide context where necessary.
+
         generate a markdown documentation for this current file: {node}. Return only the markdown part 
         of the documentation. Do not include any other text or explanation. No ''''markdown tag or anything."""
     
@@ -140,8 +198,7 @@ def process_node(node, project_root, dependencies):
             for func in functions:
                 func_prompt = (
                     f"For the file {node}"
-                    f"Please provide a summary for the function '{func}' including: "
-                    "1) its input parameters, 2) its output parameters, and 3) the role it plays as used by "
+                    f"Generate a Python docstring for this function {func} that explains its purpose, lists all parameters with types and descriptions, specifies the return value, and includes a usage example. Follow PEP 257 standards."
                 )
                 history.append({
                     "role": "user",

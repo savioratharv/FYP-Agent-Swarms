@@ -1,139 +1,112 @@
-# Function-by-Function Overview of `testClasses.py`
+# Test Classes
 
-## Class `Question`
-- **Purpose**: Models a question in a project, consisting of test cases and a maximum score.
+## Module Purpose
+This module provides classes for modeling questions and test cases in an educational grading system. Each question can have multiple test cases that determine the credit awarded based on their results. The module's design allows for various grading strategies, including full credit, partial credit, and extra credit, facilitating the evaluation of student submissions in a structured and transparent manner.
+
+## Author List
+- John DeNero (Primary Developer)
+- Dan Klein (Primary Developer)
+- Brad Miller (Student Side Autograding)
+- Nick Hay (Student Side Autograding)
+- Pieter Abbeel (Student Side Autograding)
+
+## Creation/Modification Dates
+- Creation Date: 2023-10-01
+- Last Modified: 2023-10-01
+
+## Version
+Version: 1.0.0
+
+## Dependencies
+- Python >= 3.6
+
+## Public Interface Exports
+- `Question`
+- `PassAllTestsQuestion`
+- `ExtraCreditPassAllTestsQuestion`
+- `HackedPartialCreditQuestion`
+- `Q6PartialCreditQuestion`
+- `PartialCreditQuestion`
+- `NumberPassedQuestion`
+- `TestCase`
+
+## Internal Implementation Details
+The module implements a class hierarchy where `Question` serves as the base class for different question types that define how the grading process interacts with their respective test cases. Each test case is an instance of the `TestCase` class, which provides standardized output messages for pass and fail scenarios.
+
+## Constant Definitions
+(None)
+
+## Class/Function Relationships
+- `Question` is the base class for all question types.
+- `PassAllTestsQuestion`, `ExtraCreditPassAllTestsQuestion`, `HackedPartialCreditQuestion`,
+  `Q6PartialCreditQuestion`, `PartialCreditQuestion`, and `NumberPassedQuestion` inherit from `Question`.
+- All test cases are instances of the `TestCase` class.
+
+## Class Descriptions
+
+### Question
+Represents a generic question in the grading system.
+- **Constructor Parameters**
+    - `questionDict`: Dictionary containing question attributes.
+    - `display`: String representing how the question should be displayed.
   
-### `__init__(self, questionDict, display)`
-- **Parameters**:
-  - `questionDict`: A dictionary containing question details, including maximum points.
-  - `display`: A string for displaying question information.
-- **Description**: Initializes a Question object with the maximum points and an empty list of test cases.
+- **Methods**
+    - `raiseNotDefined()`: Raises an error if the method is not implemented.
+    - `getDisplay()`: Returns the display string for the question.
+    - `getMaxPoints()`: Returns the maximum points for the question.
+    - `addTestCase(testCase, thunk)`: Adds a test case to the question.
+    - `execute(grades)`: Executes the test cases and grades them.
 
-### `getDisplay(self)`
-- **Returns**: Displays the question information.
-- **Description**: Getter method for the display property of the question.
+### PassAllTestsQuestion
+Inherits from `Question`. Requires all tests to pass for full credit.
+- **Methods**
+    - `execute(grades)`: Executes each test case and assigns credit based on the results.
 
-### `getMaxPoints(self)`
-- **Returns**: The maximum points assigned to the question.
-- **Description**: Getter method for the maximum points property.
+### ExtraCreditPassAllTestsQuestion
+Inherits from `Question`. Allows for extra credit if all tests pass.
+- **Constructor Parameters**
+    - `questionDict`: Dictionary containing question attributes, including extra points.
+  
+- **Methods**
+    - `execute(grades)`: Executes tests and awards extra points for passing all tests.
 
-### `addTestCase(self, testCase, thunk)`
-- **Parameters**:
-  - `testCase`: A test case object to be added.
-  - `thunk`: A function that will be used to execute the test case.
-- **Description**: Adds a test case and its associated function to the list of test cases.
+### HackedPartialCreditQuestion
+Inherits from `Question`. Supports partial credit based on test results.
+- **Methods**
+    - `execute(grades)`: Executes tests, awarding points for passing tests with specified points.
 
-### `execute(self, grades)`
-- **Description**: Raises an exception indicating that this method must be overridden in derived classes.
+### Q6PartialCreditQuestion
+Inherits from `Question`. Executes tests and fails if any test returns False.
+- **Methods**
+    - `execute(grades)`: Executes test cases and assigns credit accordingly, based on test results.
 
-## Class `PassAllTestsQuestion(Question)`
-- **Purpose**: Represents a question where all test cases must pass to receive credit.
+### PartialCreditQuestion
+Inherits from `Question`. Similar to `Q6PartialCreditQuestion`, manages partial credit.
+- **Methods**
+    - `execute(grades)`: Similar implementation to `Q6PartialCreditQuestion`.
 
-### `execute(self, grades)`
-- **Parameters**:
-  - `grades`: An object that manages the grading process.
-- **Description**: Executes all test cases; assigns zero credit if any test fails, otherwise assigns full credit.
+### NumberPassedQuestion
+Inherits from `Question`. The score is equal to the number of passed tests.
+- **Methods**
+    - `execute(grades)`: Counts the number of passed test cases and assigns that as the score.
 
-## Class `ExtraCreditPassAllTestsQuestion(Question)`
-- **Purpose**: A variant of the PassAllTests question that allows for extra credit points.
+### TestCase
+Represents an individual test case for a question.
+- **Constructor Parameters**
+    - `question`: The associated question object.
+    - `testDict`: Dictionary containing test attributes.
+  
+- **Methods**
+    - `raiseNotDefined()`: Raises an error if the method is not implemented.
+    - `getPath()`: Returns the path for the test case.
+    - `execute(grades, moduleDict, solutionDict)`: Executes the test and grades it.
+    - `writeSolution(moduleDict, filePath)`: Writes the solution to a file.
+    - `testPass(grades)`: Handles the output and grading for a passing test.
+    - `testFail(grades)`: Handles the output and grading for a failing test.
+    - `testPartial(grades, points, maxPoints)`: Handles partial credit scoring.
+    - `addMessage(message)`: Adds message output during test case evaluation.
 
-### `__init__(self, questionDict, display)`
-- **Parameters**:
-  - `questionDict`: A dictionary containing question details including extra points.
-  - `display`: A string describing the question.
-- **Description**: Initializes an ExtraCreditPassAllTestsQuestion with extra points.
-
-### `execute(self, grades)`
-- **Parameters**:
-  - `grades`: An object that manages the grading process.
-- **Description**: Executes test cases with logic for awarding extra points if all tests pass.
-
-## Class `HackedPartialCreditQuestion(Question)`
-- **Purpose**: Assigns partial credit based on specific test cases.
-
-### `execute(self, grades)`
-- **Parameters**:
-  - `grades`: An object that manages the grading process.
-- **Description**: Executes test cases, assigns points based on passed tests, and ensures proper crediting logic.
-
-## Class `Q6PartialCreditQuestion(Question)`
-- **Purpose**: Fails the question if any test case fails, without affecting grades otherwise.
-
-### `execute(self, grades)`
-- **Parameters**:
-  - `grades`: An object that manages the grading process.
-- **Description**: Executes test cases and assigns zero credit if any test case fails.
-
-## Class `PartialCreditQuestion(Question)`
-- **Purpose**: Similar to Q6PartialCredit with partial credit logic.
-
-### `execute(self, grades)`
-- **Parameters**:
-  - `grades`: An object that manages the grading process.
-- **Description**: Executes test cases; assigns zero credit on failure or recognizes partial credit points.
-
-## Class `NumberPassedQuestion(Question)`
-- **Purpose**: Grades based on the number of test cases passed.
-
-### `execute(self, grades)`
-- **Parameters**:
-  - `grades`: An object that manages the grading process.
-- **Description**: Counts the number of passed test cases and adds that to the grade.
-
-## Class `TestCase`
-- **Purpose**: Models a generic test case for a question.
-
-### `__init__(self, question, testDict)`
-- **Parameters**:
-  - `question`: The question to which this test case belongs.
-  - `testDict`: A dictionary containing test case details.
-- **Description**: Initializes a TestCase object with its parent question and details.
-
-### `raiseNotDefined(self)`
-- **Description**: Raises an exception indicating that a method must be overridden in derived classes.
-
-### `getPath(self)`
-- **Returns**: The path of the test case.
-- **Description**: Getter method for the test case path.
-
-### `__str__(self)`
-- **Description**: Raises an exception; intended to be overridden in derived classes to provide string representation.
-
-### `execute(self, grades, moduleDict, solutionDict)`
-- **Parameters**:
-  - `grades`: An object that manages the grading process.
-  - `moduleDict`: A dictionary containing modules for the solution.
-  - `solutionDict`: A dictionary containing the solutions.
-- **Description**: Raises an exception; intended to be overridden in derived classes to execute the test case.
-
-### `writeSolution(self, moduleDict, filePath)`
-- **Parameters**:
-  - `moduleDict`: A dictionary containing modules related to the solution.
-  - `filePath`: A path where the solution will be written.
-- **Returns**: A boolean indicating success or failure.
-- **Description**: Raises an exception; intended to be overridden in derived classes to write the solution.
-
-### `testPass(self, grades)`
-- **Parameters**:
-  - `grades`: An object that manages the grading process.
-- **Returns**: True if the test passes.
-- **Description**: Logs a message for a passing test case and returns True.
-
-### `testFail(self, grades)`
-- **Parameters**:
-  - `grades`: An object that manages the grading process.
-- **Returns**: False if the test fails.
-- **Description**: Logs a message for a failing test case and returns False.
-
-### `testPartial(self, grades, points, maxPoints)`
-- **Parameters**:
-  - `grades`: An object that manages the grading process.
-  - `points`: The points awarded for the test case.
-  - `maxPoints`: The maximum points possible for the test case.
-- **Returns**: True if the partial test passes.
-- **Description**: Logs the results of partial credit tests.
-
-### `addMessage(self, message)`
-- **Parameters**:
-  - `message`: A string to be added to the test case's messages.
-- **Description**: Adds a message to the test case's log for output during grading.
+## Revision History
+| Date Modified | Version Delta | Change Description                        | Author Initials |
+|---------------|---------------|------------------------------------------|-----------------|
+| 2023-10-01    | 1.0.0        | Initial creation of the grading classes. | JD, DK           |

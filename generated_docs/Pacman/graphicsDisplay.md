@@ -1,192 +1,132 @@
-# Pacman Graphics Display Module
+# Pacman Graphics Display
 
-## Overview
-The `graphicsDisplay.py` file contains the implementation for rendering visuals in a Pacman game, handling the display of agents, walls, food, capsules, and game information. It integrates with a tkinter-based graphical utility to facilitate graphical representation of game states.
+## Module Purpose
+This module provides the graphical interface for the Pacman game environment, allowing 
+for the visualization of game elements such as the player (Pacman), ghosts, food, and walls. 
+It handles rendering updates, animations, and displays the score and other game-related 
+information in real time.
 
-## Classes
+## Author List
+- John DeNero: Lead Developer
+- Dan Klein: Graphics Implementation
+- Brad Miller: Student Autograding
+- Nick Hay: Student Autograding
+- Pieter Abbeel: Student Autograding
 
-### 1. `InfoPane`
-This class is responsible for creating and managing the information display pane, showing score and ghost distances.
+## Creation/Modification Dates
+- Creation Date: 2023-10-01
+- Last Modified Date: 2023-10-20
 
-#### Methods:
-- **`__init__(self, layout, gridSize)`**
-  - Initializes the info pane with layout dimensions and grid size.
+## Version
+- Version: 1.0.0
 
-- **`toScreen(self, pos, y=None)`**
-  - Converts a point relative to the info pane into screen coordinates.
+## Dependency List
+- graphicsUtils >= 1.0.0
+- game >= 1.0.0
+- math >= 1.0.0
+- time >= 1.0.0
 
-- **`drawPane(self)`**
-  - Draws the initial scoreboard.
+## Public Interface Exports
+- `class InfoPane`
+- `class PacmanGraphics`
+- `class FirstPersonPacmanGraphics`
+- `def saveFrame()`
 
-- **`initializeGhostDistances(self, distances)`**
-  - Initializes ghost distance displays based on the provided distances.
+## Internal Implementation Details
+The primary functionality involves initializing and updating a graphical window 
+to visualize the game state. The module includes classes for managing various 
+graphics aspects and rendering elements like walls, food, and agents dynamically.
 
-- **`updateScore(self, score)`**
-  - Updates the score display.
+## Constant Definitions
+- `DEFAULT_GRID_SIZE = 30.0`
+- `INFO_PANE_HEIGHT = 35`
+- `BACKGROUND_COLOR = formatColor(0,0,0)`
+- `WALL_COLOR = formatColor(0,0/255.0, 51.0/255.0, 255.0/255.0)`
+- `PACMAN_COLOR = formatColor(255.0/255.0,255.0/255.0,61.0/255)`
 
-- **`setTeam(self, isBlue)`**
-  - Sets the team display (Red or Blue).
+## Class/Function Relationships
+- `InfoPane` is responsible for displaying scores and ghost distances.
+- `PacmanGraphics` handles the rendering of Pacman and ghosts including their 
+animations and interactions.
+- `FirstPersonPacmanGraphics` extends `PacmanGraphics` to provide a first-person 
+view of the game.
+- `saveFrame()` saves the graphical output as a postscript file.
 
-- **`updateGhostDistances(self, distances)`**
-  - Updates the displayed ghost distances.
+## Docstrings
 
-- **`drawGhost(self)`**
-  - Placeholder for drawing ghost representations.
+### InfoPane
+```python
+class InfoPane:
+    """
+    Manages the display of the information pane, which includes 
+    score and ghost distance information.
 
-- **`drawPacman(self)`**
-  - Placeholder for drawing Pacman representations.
+    Parameters:
+    layout: The game layout object for the current layout.
+    gridSize: The size of each cell in pixels.
 
-- **`drawWarning(self)`**
-  - Placeholder for drawing warning messages.
+    Methods:
+    - toScreen(pos, y=None): Translates grid positions to screen coordinates.
+    - drawPane(): Initializes and draws the information pane.
+    - updateScore(score): Updates the score display.
+    - updateGhostDistances(distances): Updates the distances of ghosts.
+    """
+```
 
-- **`clearIcon(self)`**
-  - Placeholder for clearing graphical icons.
+### PacmanGraphics
+```python
+class PacmanGraphics:
+    """
+    Manages the graphical display for the Pacman game.
 
-- **`updateMessage(self, message)`**
-  - Placeholder for updating messages on screen.
+    Parameters:
+    zoom: Scale factor for the graphics.
+    frameTime: Time per frame for animation.
+    capture: Boolean flag for capturing mode.
 
-- **`clearMessage(self)`**
-  - Placeholder for clearing messages from the display.
+    Methods:
+    - initialize(state, isBlue=False): Initializes the display with the current game state.
+    - drawPacman(pacman, index): Draws Pacman at the specified index.
+    - drawGhost(ghost, agentIndex): Draws a ghost at the specified index.
+    - update(newState): Updates the display based on the new game state.
+    """
+```
 
+### FirstPersonPacmanGraphics
+```python
+class FirstPersonPacmanGraphics(PacmanGraphics):
+    """
+    Provides a first-person perspective of the Pacman game.
 
-### 2. `PacmanGraphics`
-This class manages the rendering of the Pacman game graphics including the game state, agents (Pacman and ghosts), and game objects.
+    Parameters:
+    zoom: Scale factor for the graphics.
+    showGhosts: Boolean flag to toggle ghost visibility.
+    capture: Boolean flag for capturing mode.
+    frameTime: Time per frame for animation.
 
-#### Methods:
-- **`__init__(self, zoom=1.0, frameTime=0.0, capture=False)`**
-  - Initializes graphics settings such as zoom level and frame time.
+    Methods:
+    - lookAhead(config, state): Previews the view based on the current configuration.
+    """
+```
 
-- **`checkNullDisplay(self)`**
-  - Checks if the display has been initialized.
+### saveFrame
+```python
+def saveFrame():
+    """
+    Saves the current graphical output as a postscript file.
 
-- **`initialize(self, state, isBlue=False)`**
-  - Initializes graphical display for the current game state.
+    Returns:
+    None: This function does not return a value. The frame is saved to the 
+    specified output directory.
 
-- **`startGraphics(self, state)`**
-  - Sets up the graphical window and layout for rendering.
+    Example:
+    >>> saveFrame()
+    This saves the current graphics state to a postscript file.
+    """
+```
 
-- **`drawDistributions(self, state)`**
-  - Draws a grid representation of belief distributions.
-
-- **`drawStaticObjects(self, state)`**
-  - Renders walls, food, and capsules in the game.
-
-- **`drawAgentObjects(self, state)`**
-  - Draws agents (Pacman and ghosts) in the game.
-
-- **`swapImages(self, agentIndex, newState)`**
-  - Swaps the graphical representation of agents when states change.
-
-- **`update(self, newState)`**
-  - Updates the display to reflect the new game state.
-
-- **`make_window(self, width, height)`**
-  - Creates the graphical window with specified dimensions.
-
-- **`drawPacman(self, pacman, index)`**
-  - Draws the Pacman character on the screen.
-
-- **`getEndpoints(self, direction, position=(0,0))`**
-  - Calculates endpoint angles for the Pacman graphic based on direction.
-
-- **`movePacman(self, position, direction, image)`**
-  - Moves the Pacman graphic to a new position on the screen.
-
-- **`animatePacman(self, pacman, prevPacman, image)`**
-  - Animates the Pacman movement based on its previous state.
-
-- **`getGhostColor(self, ghost, ghostIndex)`**
-  - Determines the color of a ghost based on its state.
-
-- **`drawGhost(self, ghost, agentIndex)`**
-  - Draws ghost characters on the screen.
-
-- **`moveEyes(self, pos, dir, eyes)`**
-  - Moves the ghost's eyes to simulate looking around.
-
-- **`moveGhost(self, ghost, ghostIndex, prevGhost, ghostImageParts)`**
-  - Moves the ghost graphic to its new position and updates its look.
-
-- **`getPosition(self, agentState)`**
-  - Retrieves the position of an agent from its state.
-
-- **`getDirection(self, agentState)`**
-  - Retrieves the current direction of an agent.
-
-- **`finish(self)`**
-  - Ends graphical representation by closing the window and clearing resources.
-
-- **`to_screen(self, point)`**
-  - Converts a game coordinate to screen coordinates.
-
-- **`drawWalls(self, wallMatrix)`**
-  - Renders the game's walls based on the wall matrix.
-
-- **`drawFood(self, foodMatrix)`**
-  - Draws food items on the screen.
-
-- **`drawCapsules(self, capsules)`**
-  - Renders capsules on the screen.
-
-- **`removeFood(self, cell, foodImages)`**
-  - Removes food items from the display.
-
-- **`removeCapsule(self, cell, capsuleImages)`**
-  - Removes capsules from the display.
-
-- **`drawExpandedCells(self, cells)`**
-  - Draws an overlay of expanded grid positions for search agents.
-
-- **`clearExpandedCells(self)`**
-  - Clears the display of expanded cells.
-
-- **`updateDistributions(self, distributions)`**
-  - Updates the display to show agents' belief distributions.
-
-### 3. `FirstPersonPacmanGraphics`
-A specialized version of `PacmanGraphics` that provides a first-person view.
-
-#### Methods:
-- **`__init__(self, zoom=1.0, showGhosts=True, capture=False, frameTime=0)`**
-  - Initializes first-person graphics settings.
-
-- **`initialize(self, state, isBlue=False)`**
-  - Initializes the display for a first-person perspective.
-
-- **`lookAhead(self, config, state)`**
-  - Prepares the display for the next visual frame based on agent's direction.
-
-- **`getGhostColor(self, ghost, ghostIndex)`**
-  - Retrieves ghost color for display.
-
-- **`getPosition(self, ghostState)`**
-  - Retrieves the position of a ghost considering visibility settings.
-
-## Functions
-
-### 1. `add(x, y)`
-- **Input Parameters**: 
-  - `x`: Tuple indicating the first point.
-  - `y`: Tuple indicating the second point.
-- **Output Parameters**: 
-  - A new tuple representing the sum of the two points.
-- **Role**: Adds two coordinate tuples together.
-
-### 2. `saveFrame()`
-- **Input Parameters**: 
-  - None.
-- **Output Parameters**: 
-  - None.
-- **Role**: Saves the current graphical output as a PostScript file for later use.
-
-## Constants
-- `DEFAULT_GRID_SIZE`: Default size for the game grid.
-- `INFO_PANE_HEIGHT`: Height of the information pane.
-- `BACKGROUND_COLOR`: RGB color for the background.
-- `WALL_COLOR`: Color for walls.
-- `FOOD_COLOR`: Color for food items.
-- `CAPSULE_COLOR`: Color for capsules.
-- Various colors and sizes formatted for graphical representations.
-
-## Summary
-This file creates a graphical interface for the Pacman game, encapsulating the logic for rendering game elements and updating their display based on the current game states. It interacts with an external graphics utility to leverage Tkinter's capabilities for dynamic and interactive graphics.
+## Revision History
+| Date Modified | Version Delta | Change Description                       | Author |
+|---------------|---------------|-----------------------------------------|--------|
+| 2023-10-20    | 1.0.0        | Initial creation of graphical display. | JD     |
+| 2023-10-01    | 0.1.0        | Basic setup and class structure defined.| DK     |

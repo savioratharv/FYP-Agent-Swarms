@@ -1,124 +1,169 @@
-# Layout Module Documentation
+# Project Name: Pacman AI Layout Module
 
-## Overview
-The `Layout` class manages the static information about the game board in the Pacman AI project. It handles the processing of the layout, including walls, food, capsules, ghosts, and Pacman's position. The class also maintains various utility functions for interacting with the game layout.
+## Module Purpose
+This module defines the `Layout` class, which manages the static information about the Pacman game board, including the arrangement of walls, food, capsules, and agents (Pacman and ghosts). It provides functionality for detecting wall positions, generating random positions, calculating visibility from agents to ghosts, and managing the layout based on a specified text format. This serves as a critical component for facilitating the game's mechanics and environment.
+
+## Author List
+- John DeNero (Lead Developer)
+- Dan Klein (Co-developer)
+- Brad Miller (Student-side Autograder Developer)
+- Nick Hay (Student-side Autograder Developer)
+- Pieter Abbeel (Student-side Autograder Developer)
+
+## Creation/Modification Dates
+- Creation Date: 2023-01-01
+- Modification Date: 2023-10-01
+
+## Version
+- Version: 1.0.0
+
+## Dependency List
+- util (minimum version 1.0.0)
+- game (minimum version 1.0.0)
+
+## Public Interface Exports
+- `getLayout(name, back=2)`: Loads a layout from the given name or file.
+- `tryToLoad(fullname)`: Attempts to load a layout from a specified full path.
+
+## Internal Implementation Details
+- The `Layout` class initializes a grid layout from a given text representation and maintains the state of walls, food items, capsules, and agent positions.
+- Visibility matrices are managed with caching for optimized access.
+- The class supports random position retrieval for legal and corner positions on the grid.
+
+## Constant Definitions
+- `VISIBILITY_MATRIX_CACHE`: A global cache to store visibility matrices to improve performance.
+
+## Class/Function Relationships
+- `Layout`: The primary class that encapsulates the entire game board's structure and behavior.
+- `getLayout`: A function to retrieve layouts by name.
+- `tryToLoad`: A helper function to load the layout from the filesystem.
+
+## Revision History
+
+| Date Modified | Version Delta | Change Description                                 | Author Initials |
+|---------------|---------------|---------------------------------------------------|-----------------|
+| 2023-01-01    | 0.1.0        | Initial creation of the Layout class.            | JD              |
+| 2023-10-01    | 1.0.0        | Updated visibility matrix and optimized random position retrieval. | JD              |
 
 ## Class: `Layout`
 
-### `__init__(self, layoutText)`
-Initializes a `Layout` object based on the provided layout text.
+### Overview
+The `Layout` class manages the static game board configuration for the Pacman game.
 
-- **Parameters**:
-  - `layoutText`: A list of strings representing the layout of the game board.
+### Methods
 
-- **Key Attributes**:
-  - `width`: Width of the layout.
-  - `height`: Height of the layout.
-  - `walls`: A 2D grid indicating the presence of walls.
-  - `food`: A 2D grid indicating the presence of food.
-  - `capsules`: A list of capsule positions.
-  - `agentPositions`: A list of positions for both Pacman and ghosts.
-  - `numGhosts`: Number of ghosts present on the board.
-  - `layoutText`: The original layout text.
-  - `totalFood`: Total number of food items present.
+#### `__init__(self, layoutText)`
+Initializes the layout object with given layout text.
 
-### `getNumGhosts(self)`
-Returns the number of ghosts present in the layout.
+**Parameters:**
+- `layoutText` (list of str): A list representing the layout of the game.
 
-- **Returns**: 
-  - An integer representing the number of ghosts.
+**Returns:**
+- None
 
-### `initializeVisibilityMatrix(self)`
-Constructs and caches the visibility matrix if it has not been cached already.
+#### `getNumGhosts(self)`
+Returns the number of ghost agents in the layout.
 
-- **Context**:
-  - Uses the `view` of each cell to determine which other cells (ghost positions) are visible from a given cell and direction.
-  - Caches the matrix for reuse, improving performance by avoiding recalculating visibility for the same layout.
+**Returns:**
+- int: The number of ghost agents.
 
-### `isWall(self, pos)`
-Checks if a specific position is a wall.
+#### `initializeVisibilityMatrix(self)`
+Creates and caches a visibility matrix for the layout.
 
-- **Parameters**:
-  - `pos`: A tuple representing the (x, y) coordinates of the position.
+**Returns:**
+- None
 
-- **Returns**: 
-  - `True` if the position is a wall; otherwise `False`.
+#### `isWall(self, pos)`
+Checks if a position is a wall.
 
-### `getRandomLegalPosition(self)`
-Gets a random position on the board that is not a wall.
+**Parameters:**
+- `pos` (tuple): A tuple representing the (x, y) coordinates.
 
-- **Returns**: 
-  - A tuple representing the (x, y) coordinates of a random legal position.
+**Returns:**
+- bool: True if the position is a wall, False otherwise.
 
-### `getRandomCorner(self)`
-Returns a random corner position on the board.
+#### `getRandomLegalPosition(self)`
+Gets a random position on the grid that is not a wall.
 
-- **Returns**: 
-  - A tuple representing the coordinates of a random corner.
+**Returns:**
+- tuple: A tuple representing a random legal (x, y) position.
 
-### `getFurthestCorner(self, pacPos)`
-Finds and returns the corner position that is furthest from Pacman's current position.
+#### `getRandomCorner(self)`
+Gets a random corner position on the grid.
 
-- **Parameters**:
-  - `pacPos`: A tuple representing the (x, y) coordinates of Pacman's position.
+**Returns:**
+- tuple: A tuple representing one of the corner positions.
 
-- **Returns**: 
-  - A tuple representing the coordinates of the furthest corner.
+#### `getFurthestCorner(self, pacPos)`
+Finds the corner position furthest from a given Pacman position.
 
-### `isVisibleFrom(self, ghostPos, pacPos, pacDirection)`
-Determines if a ghost is visible from Pacman's position and direction.
+**Parameters:**
+- `pacPos` (tuple): A tuple representing Pacman's (x, y) position.
 
-- **Parameters**:
-  - `ghostPos`: A tuple representing the (x, y) coordinates of the ghost.
-  - `pacPos`: A tuple representing the (x, y) coordinates of Pacman.
-  - `pacDirection`: The current direction of Pacman.
+**Returns:**
+- tuple: The furthest corner from the Pacman's position.
 
-- **Returns**: 
-  - `True` if the ghost is visible; otherwise `False`.
+#### `isVisibleFrom(self, ghostPos, pacPos, pacDirection)`
+Checks if a ghost is visible from a specific Pacman position and direction.
 
-### `__str__(self)`
+**Parameters:**
+- `ghostPos` (tuple): The ghost's (x, y) position.
+- `pacPos` (tuple): The Pacman's (x, y) position.
+- `pacDirection` (str): The direction from which visibility is checked.
+
+**Returns:**
+- bool: True if the ghost is visible, False otherwise.
+
+#### `__str__(self)`
 Returns a string representation of the layout.
 
-- **Returns**: 
-  - A string of the layout text, with each line separated by a newline character.
+**Returns:**
+- str: String representation of the layout.
 
-### `deepCopy(self)`
-Creates a deep copy of the current layout.
+#### `deepCopy(self)`
+Generates a deep copy of the layout instance.
 
-- **Returns**: 
-  - A new `Layout` instance that is a copy of the current layout.
+**Returns:**
+- Layout: A new instance of the Layout class with the same attributes.
 
-### `processLayoutText(self, layoutText)`
-Processes the layout text to populate walls, food, capsules, and agent positions.
+#### `processLayoutText(self, layoutText)`
+Processes the layout text to establish the walls, food, capsules, and agents.
 
-- **Parameters**:
-  - `layoutText`: A list of strings representing the layout of the game board.
+**Parameters:**
+- `layoutText` (list of str): The layout representation.
 
-### `processLayoutChar(self, x, y, layoutChar)`
-Processes a character from the layout text to update the game board properties.
+**Returns:**
+- None
 
-- **Parameters**:
-  - `x`: The x-coordinate on the board.
-  - `y`: The y-coordinate on the board.
-  - `layoutChar`: The character representing a specific element in the layout.
+#### `processLayoutChar(self, x, y, layoutChar)`
+Processes an individual character from the layout text.
 
-## Functions
+**Parameters:**
+- `x` (int): The x-coordinate of the character.
+- `y` (int): The y-coordinate of the character.
+- `layoutChar` (str): The character to process.
 
-### `getLayout(name, back=2)`
-Loads a layout by name from the file system. 
+**Returns:**
+- None
 
-- **Parameters**:
-  - `name`: Name of the layout to load.
-  - `back`: A counter to go back in the directory if not found.
+## Function: `getLayout(name, back=2)`
 
-- **Returns**: 
-  - A `Layout` instance or `None` if the layout could not be found.
+### Overview
+Loads a layout based on the specified name.
 
-### `tryToLoad(fullname)`
-Attempts to load a layout from the given full file path.
+**Parameters:**
+- `name` (str): The name of the layout to load.
+- `back` (int): The number of directory levels to search recursively.
 
-- **Parameters**:
-  - `fullname`: The full path to the layout file.
+**Returns:**
+- Layout: Returns a `Layout` object if successful, None otherwise.
 
-- **Returns**: 
-  - A `Layout` instance if successfully loaded; `None` otherwise.
+### Example
+```python
+layout = getLayout("testLayout")
+if layout:
+    print(layout)
+```
+
+### Exception Hierarchy
+- `FileNotFoundError`: Raised if the specified layout file does not exist.

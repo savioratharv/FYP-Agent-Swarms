@@ -1,101 +1,94 @@
-# Grades Class Documentation
+# Grading System for Pacman AI Projects
 
-## Overview
-The `Grades` class is designed to manage and compute project grades for educational assignments. It provides functionalities for grading, output formatting, and exception handling during the grading process. This class also supports output for platforms like edX and GradeScope.
+## Module Purpose
+The grading module provides a structured way to score student submissions for the Pacman AI projects at UC Berkeley. It allows the definition of grading schemes, captures errors and messages, and outputs scores for various platforms such as GradeScope and edX. The functionality aids educators in evaluating student work and providing feedback systematically and clearly.
 
-## Function-by-Function Overview
+## Author List
+- John DeNero (Lead Developer)
+- Dan Klein (Co-developer)
+- Brad Miller (Student Grading Integration)
+- Nick Hay (Student Grading Integration)
+- Pieter Abbeel (Student Grading Integration)
 
-### `__init__(self, projectName, questionsAndMaxesList, gsOutput=False, edxOutput=False, muteOutput=False)`
-- **Purpose**: Initializes an instance of the `Grades` class with project name, questions, maximum scores, and output options.
-- **Parameters**:
-  - `projectName`: Name of the project being graded.
-  - `questionsAndMaxesList`: A list of tuples containing question names and their respective maximum scores.
-  - `gsOutput`: Boolean option to enable GradeScope output.
-  - `edxOutput`: Boolean option to enable edX output.
-  - `muteOutput`: Boolean option to suppress output during grading.
-- **Attributes**:
-  - Initializes dictionaries to track points, messages, and prerequisites for the questions.
-  - Captures the start time for the grading session.
+## Creation/Modification Dates
+- Creation Date: 2023-10-01
+- Last Modified: 2023-10-20
 
-### `addPrereq(self, question, prereq)`
-- **Purpose**: Adds a prerequisite relationship between questions.
-- **Parameters**:
-  - `question`: The question that has a prerequisite.
-  - `prereq`: The prerequisite question that must be completed before the specified question.
+## Version
+- Version: 1.0.0
 
-### `grade(self, gradingModule, exceptionMap={}, bonusPic=False)`
-- **Purpose**: Grades each specified question using functions defined in the provided grading module.
-- **Parameters**:
-  - `gradingModule`: The grading module containing grading functions for each question.
-  - `exceptionMap`: A mapping of exceptions to specific questions for tailored hints.
-  - `bonusPic`: Boolean option to print a bonus image upon achieving full credit.
-- **Logic**:
-  - Iterates through each question to execute grading functions, handling exceptions, and maintaining a completion status.
+## Dependencies
+- Python 3.6 or higher
+- cgi 1.0
+- time 1.0
+- sys 1.0
+- json 1.0
+- traceback 1.0
+- pdb 1.0
+- collections 1.0
+- util (custom module)
 
-### `addExceptionMessage(self, q, inst, traceback)`
-- **Purpose**: Formats and adds a message for any exceptions raised during grading.
-- **Parameters**:
-  - `q`: The current question being graded.
-  - `inst`: The instance of the raised exception.
-  - `traceback`: The traceback object for the exception.
+## Public Interface Exports
+- `Grades`: Main class for managing grading logic.
+- `Counter`: A utility class for counting scores with default values.
 
-### `addErrorHints(self, exceptionMap, errorInstance, questionNum)`
-- **Purpose**: Adds hints related to errors encountered during grading, based on the type of exception.
-- **Parameters**:
-  - `exceptionMap`: A map of exceptions to hints for each question.
-  - `errorInstance`: The instance of the encountered error.
-  - `questionNum`: The number of the question where the error occurred.
+## Internal Implementation Details
+- The `Grades` class handles initialization, grading operations, message formatting, and output generation for grades.
+- The `Counter` class extends dictionary functionality for score management.
 
-### `produceGradeScopeOutput(self)`
-- **Purpose**: Generates and writes the output for GradeScope in JSON format.
-- **Logic**:
-  - Creates an output dictionary containing total scores and individual question results, then saves this as `gradescope_response.json`.
+## Constant Definitions
+- No constants are defined in this module, but the project might include configurations in the external `util` module.
 
-### `produceOutput(self)`
-- **Purpose**: Generates and writes the output for edX in HTML format.
-- **Logic**:
-  - Aggregates the results for each question and overall score, writing the formatted results to `edx_response.html` and the total score to `edx_grade`.
+## Class/Function Relationships
+- `Grades` utilizes the `Counter` class for scoring.
+- `Grades` defines methods such as `grade`, `addPoints`, `fail`, and output methods for integration with grading platforms.
 
-### `fail(self, message, raw=False)`
-- **Purpose**: Marks the grading state as failed, assigns zero credit to the current question, and logs the failure message.
-- **Parameters**:
-  - `message`: The message indicating failure details.
-  - `raw`: Boolean option indicating whether the message should be treated as raw output.
+## Class: Grades
+### Overview
+A data structure for project grades, along with formatting code to display them.
 
-### `assignZeroCredit(self)`
-- **Purpose**: Assigns zero points for the current question being graded.
+### Parameters
+- `projectName` (str): The name of the project.
+- `questionsAndMaxesList` (list): A list of tuples containing question names and their maximum points.
+- `gsOutput` (bool): Flag to enable GradeScope output.
+- `edxOutput` (bool): Flag to enable edX output.
+- `muteOutput` (bool): Flag to suppress console output.
 
-### `addPoints(self, amt)`
-- **Purpose**: Adds a specified amount of points to the current question's score.
-- **Parameters**:
-  - `amt`: The amount of points to be added.
+### Methods
+- `addPrereq(question, prereq)`: Adds a prerequisite relationship between questions.
+- `grade(gradingModule, exceptionMap={}, bonusPic=False)`: Grades each question using a provided grading module.
+- `produceOutput()`: Generates HTML output for edX integration.
+- `produceGradeScopeOutput()`: Produces output for GradeScope integration.
+- Additional methods for managing points and messages.
 
-### `deductPoints(self, amt)`
-- **Purpose**: Deducts a specified amount of points from the current question's score.
-- **Parameters**:
-  - `amt`: The amount of points to be deducted.
+## Class: Counter
+### Overview
+A dictionary-based structure with a default value of zero for score counting.
 
-### `assignFullCredit(self, message="", raw=False)`
-- **Purpose**: Assigns the maximum possible points to the current question and optionally logs a message.
-- **Parameters**:
-  - `message`: Optional message to log regarding full credit assignment.
-  - `raw`: Boolean option indicating if the message is raw output.
+### Parameters
+- Inherits from `dict`.
 
-### `addMessage(self, message, raw=False)`
-- **Purpose**: Adds a message to the current question, optionally formatting it for HTML output.
-- **Parameters**:
-  - `message`: The message to be added.
-  - `raw`: Boolean option to indicate if the message should be treated as raw output.
+### Methods
+- `__getitem__(idx)`: Returns the current score or zero if not set.
+- `totalCount()`: Returns the sum of counts for all keys.
 
-### `addMessageToEmail(self, message)`
-- **Purpose**: (Deprecated) Intended to add a message for email notifications.
-- **Parameters**:
-  - `message`: The message text to be added.
-  
-### Counter Class Overview
+## Revision History
+| Date Modified | Version Delta | Change Description               | Author Initials |
+|---------------|---------------|----------------------------------|------------------|
+| 2023-10-01    | 1.0.0        | Initial creation of grading module | JD                |
+| 2023-10-20    | 1.0.1        | Added exception handling and formatting updates | DK, BM            |
 
-#### `__getitem__(self, idx)`
-- **Purpose**: Extends dict behavior to return a default value of zero for missing keys.
+## Usage Examples
+```python
+# To create an instance of Grades:
+grades = Grades("Pacman Project", [("q1", 10), ("q2", 15)], gsOutput=True)
 
-#### `totalCount(self)`
-- **Purpose**: Returns the sum of values for all keys within the `Counter` instance.
+# Grading the project:
+grades.grade(sys.modules[__name__], exceptionMap={})
+```
+
+### Exception Hierarchy Documentation
+- `Exception`: Base class for all exceptions.
+  - `KeyError`: Raised when a non-existing question is accessed.
+  - `TypeError`: Raised for incorrect handling of types during operations.
+  - Custom exceptions may be raised by the grading functions in the `gradingModule`.

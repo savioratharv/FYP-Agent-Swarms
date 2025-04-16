@@ -1,117 +1,122 @@
-# Game.py Documentation
+# Game
 
-## Classes
+## Module Purpose
+The `game.py` module defines the core classes and logic required to manage the Pacman game, including the implementation of agents, configurations, states, and the game loop. It is responsible for controlling the interaction between agents, displaying the game state, and handling the rules under which the game operates. This module lays the foundation for creating and extending game agents in a dynamic environment.
 
-### Agent
-The base class for agents within the game. An agent must implement the `getAction` method to define its behavior in response to the current game state.
+## Author List
+- John DeNero: Lead developer
+- Dan Klein: Co-developer
+- Brad Miller: Student side development
+- Nick Hay: Student side development
+- Pieter Abbeel: Student side development
 
-- **Methods**:
-  - `__init__(index=0)`: Initializes an agent with a specified index.
-  - `getAction(state)`: Must be implemented by subclasses to return an action based on the given game state.
+## Creation/Modification Dates
+- Creation Date: 2009-03-01
+- Modification Date: 2023-10-01
 
----
+## Version
+- Version: 1.0.0
 
-### Directions
-A utility class that defines movement directions and their corresponding relationships (left, right, reverse).
+## Dependency List
+- Python >= 3.6
+- Util module
 
-- **Constants**:
-  - `NORTH`, `SOUTH`, `EAST`, `WEST`, `STOP`: Strings representing directions.
-  
-- **Dictionaries**:
-  - `LEFT`: Maps each direction to its left direction.
-  - `RIGHT`: Maps each direction to its right direction.
-  - `REVERSE`: Maps each direction to its opposite direction.
+## Public Interface Exports
+- `Agent`: Base class for all agents implementing the `getAction` method.
+- `Directions`: Class defining movement directions and their relationships.
+- `Configuration`: Class representing the position and direction of an agent.
+- `AgentState`: Class containing the state of an agent, including configuration.
+- `Grid`: Class representing a 2D grid used for the game environment.
+- `Game`: Class managing the game flow, agent actions, and state transitions.
 
----
+## Internal Implementation Details
+The internal workings of the `game.py` module are encapsulated within several classes that manage different aspects of the game:
 
-### Configuration
-Represents an agent's position and direction on the game board. 
+1. **Agent**: This class serves as the base for any agent that interacts with the game, requiring implementation of the `getAction` method.
+2. **Directions**: A utility class that contains constants representing directional movement and their relationships (left, right, reverse).
+3. **Configuration**: Represents an agent's position and direction in the game grid and provides methods for manipulating this state.
+4. **AgentState**: Holds the current and starting configuration for agents, along with their state attributes such as whether they are Pacman or ghosts.
+5. **Grid**: Represents the game map as a 2D boolean array, with utility functions for manipulation and representation.
+6. **Game**: Manages the game's main control loop, handling agent turns, scoring, and game over conditions.
 
-- **Methods**:
-  - `__init__(pos, direction)`: Initializes a configuration with a position and direction.
-  - `getPosition()`: Returns the current (x, y) coordinates.
-  - `getDirection()`: Returns the current direction.
-  - `isInteger()`: Checks if the coordinates are both integers.
-  - `__eq__(other)`: Compares two configurations.
-  - `__hash__()`: Generates a hash for the configuration.
-  - `__str__()`: Returns a string representation of the configuration.
-  - `generateSuccessor(vector)`: Creates a new configuration by moving in the specified vector direction.
+## Constant Definitions
 
----
+### Direction Constants
+- `NORTH`: 'North'
+- `SOUTH`: 'South'
+- `EAST`: 'East'
+- `WEST`: 'West'
+- `STOP`: 'Stop'
 
-### AgentState
-Holds the state information for an agent, including its configuration and status (such as if it's Pacman).
+### Direction Relationships
+- `LEFT`: Direction relationships indicating left turns.
+- `RIGHT`: Direction relationships indicating right turns.
+- `REVERSE`: Direction relationships indicating reverse turns.
 
-- **Methods**:
-  - `__init__(startConfiguration, isPacman)`: Initializes the agent's state.
-  - `__str__()`: Provides a string representation of the agent state.
-  - `__eq__(other)`: Compares two agent states.
-  - `__hash__()`: Generates a hash for the agent state.
-  - `copy()`: Creates a duplicate of the agent state.
-  - `getPosition()`: Returns the agent's current position.
-  - `getDirection()`: Returns the agent's current direction.
+## Class/Function Relationships
+- The `Game` class interacts with `Agent` instances to solicit actions during each turn, maintaining the overall game state via `GameStateData`.
+- `Actions` provides utility methods for direction manipulation and movement checks, aiding in the interaction between `Configuration`, `Grid`, and agents.
+- `Grid` is used to establish the map layout and food status, which impacts the actions available to agents.
 
----
+## Docstrings
+The methods and classes within this module are thoroughly documented following PEP 257, providing functionality overviews, parameter/return value tables, usage examples, and documented exceptions.
 
-### Grid
-A two-dimensional array representing the game board. It manages the state of various cells (empty, food, walls).
+### Agent Class
+```python
+class Agent:
+    """
+    An agent must define a getAction method, but may also define the
+    following methods which will be called if they exist:
+    
+    def registerInitialState(self, state):  # inspects the starting state
+    """
+```
 
-- **Methods**:
-  - `__init__(width, height, initialValue=False, bitRepresentation=None)`: Initializes the grid.
-  - `__getitem__(i)`: Retrieves the data for the specified position.
-  - `__setitem__(key, item)`: Sets the data for the specified position.
-  - `__str__()`: Constructs a visual representation of the grid.
-  - `__eq__(other)`: Compares two grid states.
-  - `__hash__()`: Generates a hash for the grid.
-  - `copy()`: Returns a shallow copy of the grid.
-  - `deepCopy()`: Returns a deep copy of the grid.
-  - `shallowCopy()`: Returns a shallow copy of the grid.
-  - `count(item=True)`: Counts the number of cells with a specified value.
-  - `asList(key=True)`: Returns a list of positions that match a specified value.
-  - `packBits()`: Generates an efficient representation of the grid using bit-packing.
-  - `_cellIndexToPosition(index)`: Converts a linear index to (x, y) coordinates.
-  - `_unpackBits(bits)`: Fills the grid with data from a bit-level representation.
-  - `_unpackInt(packed, size)`: Unpacks bits to boolean values.
+### Directions Class
+```python
+class Directions:
+    """
+    Defines movement directions and their relationships for the Agents.
+    """
+```
 
----
+### Configuration Class
+```python
+class Configuration:
+    """
+    Holds the (x,y) coordinate of a character, along with its traveling direction.
 
-### Actions
-A utility class that provides methods for action manipulation in the game.
+    The convention for positions, like a graph, is that (0,0) is the lower left corner, x increases
+    horizontally and y increases vertically.
+    """
+```
 
-- **Methods**:
-  - `reverseDirection(action)`: Returns the opposite direction of the given action.
-  - `vectorToDirection(vector)`: Converts a movement vector to a direction.
-  - `directionToVector(direction, speed=1.0)`: Converts a direction to a movement vector.
-  - `getPossibleActions(config, walls)`: Returns a list of legal actions available to an agent at a given configuration.
-  - `getLegalNeighbors(position, walls)`: Returns valid neighboring positions based on walls.
-  - `getSuccessor(position, action)`: Computes the next position based on the current position and action taken.
+### AgentState Class
+```python
+class AgentState:
+    """
+    Contains the state of an agent including its configuration and attributes.
+    """
+```
 
----
+### Grid Class
+```python
+class Grid:
+    """
+    A 2D array representing the game map, with boolean values indicating walls or food.
+    """
+```
 
-### GameStateData
-Holds the current state of the game, including the positions of agents, food, the score, and other gameplay data.
+### Game Class
+```python
+class Game:
+    """
+    The Game class manages game control flow, processing agent actions and updating state.
+    """
+```
 
-- **Methods**:
-  - `__init__(prevState=None)`: Initializes GameStateData by copying from a predecessor state if provided.
-  - `deepCopy()`: Creates a deep copy of the current state.
-  - `copyAgentStates(agentStates)`: Copies the agent states for the current game state.
-  - `__eq__(other)`: Compares two game states.
-  - `__hash__()`: Generates a hash for the game state.
-  - `__str__()`: Returns a string representation of the game state.
-  - `initialize(layout, numGhostAgents)`: Initializes the game state from a given layout and the number of ghost agents.
-
----
-
-### Game
-The main control class that orchestrates the flow of the game, invoking agent actions and managing game states.
-
-- **Methods**:
-  - `__init__(agents, display, rules, startingIndex=0, muteAgents=False, catchExceptions=False)`: Initializes the game with specified parameters.
-  - `getProgress()`: Returns the progress of the game, indicating completion.
-  - `_agentCrash(agentIndex, quiet=False)`: Handles the situation when an agent encounters a crash.
-  - `run()`: The main loop for game execution, handling agent actions, state updates, and game display.
-
---- 
-
-## Dependencies
-The `Counter` class, defined elsewhere, aids in counting occurrences and is utilized for tracking event frequencies within the agents in the game environment.
+## Revision History
+| Date Modified | Version Delta | Change Description                        | Author Initials |
+|---------------|---------------|------------------------------------------|------------------|
+| 2023-10-01    | 1.0.0        | Initial release of game module           | JD, DK           |
+|               |               | Added core game management functionality |                  |

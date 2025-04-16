@@ -1,65 +1,151 @@
-# Pacman Search.py Documentation
+# Search.py Documentation
 
-## Overview
-This module implements generic search algorithms used by Pacman agents. The algorithms include Depth-First Search, Breadth-First Search, Uniform Cost Search, and A* Search. These algorithms navigate through a defined search space represented by a `SearchProblem` class which outlines the structure of potential search problems in the Pacman game.
+## Project Name
+Pacman AI Search
 
-## Class Definition
+## Module Purpose
+This module implements various search algorithms that are used by Pacman agents to navigate through mazes. The algorithms included are Depth First Search (DFS), Breadth First Search (BFS), Uniform Cost Search (UCS), and A* Search, each of which provides a distinct strategy for exploring possible paths and determining the optimal route to a goal state.
 
-### SearchProblem
-This abstract class defines the methods necessary for any search problem but does not implement any of them. It includes methods to retrieve the start state, check if a state is a goal, get successors of a state, and calculate the cost of a sequence of actions.
+## Author List
+- John DeNero: Core Developer
+- Dan Klein: Core Developer
+- Brad Miller: Student Autograder Contributor
+- Nick Hay: Student Autograder Contributor
+- Pieter Abbeel: Student Autograder Contributor
 
----
+## Creation/Modification Dates
+- Creation Date: 2023-10-01
+- Last Modification Date: 2023-10-15
 
-## Function Summaries
+## Version
+1.0.0
 
-### tinyMazeSearch(problem)
-Returns a predefined sequence of moves that solves the tinyMaze problem. This function should only be used for the specific tinyMaze and is not applicable for other mazes.
-
-**Key Tasks:**
-- Define specific moves (SOUTH and WEST) to navigate a static maze layout.
-
-### depthFirstSearch(problem)
-Implements the Depth-First Search (DFS) algorithm to explore the search space by traversing as deep as possible before backtracking.
-
-**Key Tasks:**
-- Utilize a `Stack` to manage the nodes to be explored.
-- Track visited nodes to avoid cycles.
-- Return the path of actions to reach the goal state.
-
-### breadthFirstSearch(problem)
-Implements the Breadth-First Search (BFS) algorithm to explore the shallowest nodes in the search tree first.
-
-**Key Tasks:**
-- Use a `Queue` to explore nodes level by level.
-- Maintain a list of visited nodes to prevent revisiting them.
-- Return the path of actions leading to the goal state.
-
-### uniformCostSearch(problem)
-Implements the Uniform Cost Search algorithm which prioritizes nodes based on the cumulative cost to reach them.
-
-**Key Tasks:**
-- Utilize a `PriorityQueue` to efficiently explore the least costly paths first.
-- Maintain a list of visited nodes and update priorities as needed.
-- Return the path leading to the goal state based on the least cost.
-
-### nullHeuristic(state, problem=None)
-Provides a trivial heuristic for search algorithms. Returns a value of zero, indicating no estimated cost from the current state to the nearest goal.
-
-**Key Tasks:**
-- Serve as a placeholder for scenarios where no heuristic is provided.
-
-### aStarSearch(problem, heuristic=nullHeuristic)
-Implements the A* Search algorithm that combines the lowest cost from the start state and an estimated cost to the goal.
-
-**Key Tasks:**
-- Utilize a `PriorityQueue` to explore nodes based on their combined cost (g(n) + h(n)).
-- Track visited nodes and make use of heuristics to optimize the search process.
-- Return the path of actions that leads to the goal state.
+## Dependency List
+- Python 3.7+
+- util (>=1.0.0)
+- game (>=1.0.0)
 
 ---
 
-## Abbreviations
-- `bfs`: Alias for `breadthFirstSearch`
-- `dfs`: Alias for `depthFirstSearch`
-- `astar`: Alias for `aStarSearch`
-- `ucs`: Alias for `uniformCostSearch`
+## Public Interface Exports
+- `tinyMazeSearch(problem)`
+- `depthFirstSearch(problem)`
+- `breadthFirstSearch(problem)`
+- `uniformCostSearch(problem)`
+- `aStarSearch(problem, heuristic=nullHeuristic)`
+
+---
+
+## Internal Implementation Details
+- The search algorithms utilize various data structures such as stacks, queues, and priority queues to manage the exploration of potential paths.
+- Each algorithm maintains a list of visited nodes to avoid cycles and redundant explorations.
+- Successor nodes are generated from the current node based on available actions and costs.
+
+---
+
+## Constant Definitions
+- No constant values are defined in this module.
+
+---
+
+## Class/Function Relationships
+- `SearchProblem`: An abstract class that outlines the structure of a search problem.
+- `tinyMazeSearch`: A function that returns moves to solve the tinyMaze specifically.
+- `depthFirstSearch`, `breadthFirstSearch`, `uniformCostSearch`, `aStarSearch`: Functions that implement various search strategies as defined in search algorithms.
+
+---
+
+## Function Documentation
+
+### tinyMazeSearch
+```python
+def tinyMazeSearch(problem):
+```
+- **Functionality Overview:** Returns a sequence of moves that solves the tinyMaze. 
+- **Parameters:**
+    - `problem`: A `SearchProblem` instance.
+- **Returns:** A list of actions to reach the goal in the tinyMaze.
+- **Usage Example:**
+    ```python
+    >>> tinyMazeSearch(some_problem)
+    ['S', 'S', 'W', 'S', 'W', 'W', 'S', 'W']
+    ```
+- **Exception Hierarchy:** N/A
+
+---
+
+### depthFirstSearch
+```python
+def depthFirstSearch(problem):
+```
+- **Functionality Overview:** Uses the depth-first search algorithm to find a path to the goal state.
+- **Parameters:**
+    - `problem`: A `SearchProblem` instance.
+- **Returns:** A list of actions leading to the goal state, or an empty list if no path is found.
+- **Usage Example:**
+    ```python
+    >>> depthFirstSearch(some_problem)
+    ['South', 'South', 'West', 'South']
+    ```
+- **Exception Hierarchy:** If the problem is not defined properly, a `NotImplementedError` may occur.
+
+---
+
+### breadthFirstSearch
+```python
+def breadthFirstSearch(problem):
+```
+- **Functionality Overview:** Employs the breadth-first search strategy to explore the shallowest nodes first.
+- **Parameters:**
+    - `problem`: A `SearchProblem` instance.
+- **Returns:** A list of actions to reach the goal state.
+- **Usage Example:**
+    ```python
+    >>> breadthFirstSearch(some_problem)
+    ['North', 'North', 'East']
+    ```
+- **Exception Hierarchy:** If the problem is not defined, a `NotImplementedError` may occur.
+
+---
+
+### uniformCostSearch
+```python
+def uniformCostSearch(problem):
+```
+- **Functionality Overview:** Searches the node of least total cost first.
+- **Parameters:**
+    - `problem`: A `SearchProblem` instance.
+- **Returns:** A list of actions that leads to the optimal goal state based on costs.
+- **Usage Example:**
+    ```python
+    >>> uniformCostSearch(some_problem)
+    ['East', 'East', 'South']
+    ```
+- **Exception Hierarchy:** If the problem is not set appropriately, a `NotImplementedError` may arise.
+
+---
+
+### aStarSearch
+```python
+def aStarSearch(problem, heuristic=nullHeuristic):
+```
+- **Functionality Overview:** Combines the cost and heuristic to find the optimal path to the goal.
+- **Parameters:**
+    - `problem`: A `SearchProblem` instance.
+    - `heuristic`: A function that estimates the distance to the nearest goal.
+- **Returns:** A list of actions leading to the goal state based on the combined cost and heuristic.
+- **Usage Example:**
+    ```python
+    >>> aStarSearch(some_problem, heuristic)
+    ['West', 'West', 'North']
+    ```
+- **Exception Hierarchy:** A poorly defined problem can lead to a `NotImplementedError`.
+
+---
+
+## Revision History
+
+| Date Modified   | Version Delta | Change Description                                | Author Initials |
+|------------------|---------------|---------------------------------------------------|------------------|
+| 2023-10-01       | 1.0.0         | Initial creation of search algorithms module.     | JD, DK           |
+| 2023-10-15       | 1.0.1         | Updated documentation and fixed minor bugs.       | JD               |

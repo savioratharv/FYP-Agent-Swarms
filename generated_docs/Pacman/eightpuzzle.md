@@ -1,110 +1,53 @@
-# Documentation for `eightpuzzle.py`
+# Eight Puzzle Project
 
-## Overview
-The `eightpuzzle.py` module implements the mechanics and search strategies for the Eight Puzzle problem. It defines the `EightPuzzleState` class representing the state of the puzzle and the `EightPuzzleSearchProblem` class defining the search problem. The module includes methods for legal moves, state transitions, and searching for solutions.
+## Module Purpose
+The Eight Puzzle module implements the mechanics of the classic 8-puzzle game, which involves sliding pieces on a 3x3 grid to achieve a specified goal state. This module also provides a framework for searching through the state space of puzzle configurations to determine a sequence of moves to reach the goal state.
 
-## Class: `EightPuzzleState`
+## Author List
+- John DeNero: Lead Developer
+- Dan Klein: Contributor
+- Brad Miller: Contributor
+- Nick Hay: Contributor
+- Pieter Abbeel: Contributor
 
-### `__init__(self, numbers)`
-- **Purpose**: Initialize an instance of EightPuzzleState with a specific ordering of numbers.
-- **Parameters**: 
-  - `numbers`: A list of integers (0-8) representing the puzzle configuration, where 0 denotes the blank space.
-- **Key Tasks**: 
-  - Reverses the input list to prepare it for 2D representation.
-  - Populates the `cells` attribute with a 3x3 grid.
-  - Sets the `blankLocation` where the blank space (0) is located.
+## Creation/Modification Dates
+- Creation Date: 2023-10-01
+- Last Modified Date: 2023-10-01
 
-### `isGoal(self)`
-- **Purpose**: Check if the current state is in the goal configuration.
-- **Returns**: 
-  - `True` if the puzzle is in the goal state, `False` otherwise.
+## Version
+- Version: 1.0.0
 
-### `legalMoves(self)`
-- **Purpose**: Determine the possible legal moves from the current state.
-- **Returns**: 
-  - A list of strings representing legal moves: `['up', 'down', 'left', 'right']`.
+## Dependencies
+- numpy >= 1.18.0
+- random >= 2.0
 
-### `result(self, move)`
-- **Purpose**: Generate a new EightPuzzleState based on the provided move.
-- **Parameters**: 
-  - `move`: A string indicating the action ('up', 'down', 'left', 'right').
-- **Returns**: 
-  - A new `EightPuzzleState` reflecting the state after applying the move.
-- **Key Tasks**: 
-  - Validates the move.
-  - Creates a copy of the current state.
-  - Updates the new state to reflect the change.
+## Public Interface Exports
+- `loadEightPuzzle(puzzleNumber)`: Generates and returns an EightPuzzleState instance.
+- `createRandomEightPuzzle(moves)`: Creates a random puzzle by applying a series of random moves.
 
-### `__eq__(self, other)`
-- **Purpose**: Overload equality operator to compare two Puzzle states.
-- **Parameters**: 
-  - `other`: Another instance of `EightPuzzleState`.
-- **Returns**: 
-  - `True` if both states are identical, `False` otherwise.
+## Internal Implementation Details
+- The eight-puzzle mechanics are encapsulated in the `EightPuzzleState` class.
+- A search problem framework is provided by the `EightPuzzleSearchProblem` class.
+- Legal moves include sliding the blank space up, down, left, or right.
 
-### `__hash__(self)`
-- **Purpose**: Generate a hash value for the `EightPuzzleState` instance.
-- **Returns**: 
-  - An integer hash value computed based on the state.
+## Constant Definitions
+- `EIGHT_PUZZLE_DATA`: Contains predefined configurations for the eight puzzle.
 
-### `__getAsciiString(self)`
-- **Purpose**: Generate a string representation of the puzzle for display.
-- **Returns**: 
-  - A formatted string displaying the 3x3 grid.
+## Class/Function Relationships
+1. `EightPuzzleState`: Represents an instance of the eight puzzle.
+   - Methods: 
+     - `isGoal()`: Checks if the current state is the goal state.
+     - `legalMoves()`: Returns a list of legal moves from the current state.
+     - `result(move)`: Returns a new state based on the provided move.
+2. `EightPuzzleSearchProblem`: Defines a search problem for the eight puzzle domain.
+   - Methods:
+     - `getStartState()`: Returns the initial puzzle state.
+     - `isGoalState(state)`: Checks if the provided state is the goal state.
+     - `getSuccessors(state)`: Retrieves successors for the given state.
+     - `getCostOfActions(actions)`: Calculates the total cost for a sequence of actions.
 
-### `__str__(self)`
-- **Purpose**: Return a string representation of the current puzzle state.
-- **Returns**: 
-  - A string that utilizes `__getAsciiString()`.
+## Revision History Table
 
-## Class: `EightPuzzleSearchProblem`
-
-### `__init__(self, puzzle)`
-- **Purpose**: Initialize an instance of EightPuzzleSearchProblem with a given puzzle.
-- **Parameters**: 
-  - `puzzle`: An instance of `EightPuzzleState` representing the starting state.
-
-### `getStartState(self)`
-- **Purpose**: Retrieve the starting state of the search problem.
-- **Returns**: 
-  - The initial puzzle state.
-
-### `isGoalState(self, state)`
-- **Purpose**: Evaluate whether a given state is the goal state.
-- **Parameters**: 
-  - `state`: An instance of `EightPuzzleState`.
-- **Returns**: 
-  - `True` if the state is the goal state; otherwise, `False`.
-
-### `getSuccessors(self, state)`
-- **Purpose**: Generate the successors of a given state.
-- **Parameters**: 
-  - `state`: An instance of `EightPuzzleState`.
-- **Returns**: 
-  - A list of tuples containing each successor state, the action taken, and the step cost (always 1.0).
-
-### `getCostOfActions(self, actions)`
-- **Purpose**: Calculate the total cost of performing a sequence of actions.
-- **Parameters**: 
-  - `actions`: A list of actions (moves) to perform.
-- **Returns**: 
-  - Total cost as an integer representing the number of actions.
-
-## Functions
-
-### `loadEightPuzzle(puzzleNumber)`
-- **Purpose**: Load a specific puzzle based on a predefined index.
-- **Parameters**: 
-  - `puzzleNumber`: An index (0-5) corresponding to one of the predefined puzzles.
-- **Returns**: 
-  - An `EightPuzzleState` object for the specified puzzle.
-
-### `createRandomEightPuzzle(moves=100)`
-- **Purpose**: Generate a random puzzle configuration by executing random moves.
-- **Parameters**: 
-  - `moves`: The number of random moves to apply (default is 100).
-- **Returns**: 
-  - An instance of `EightPuzzleState` representing a randomized puzzle configuration.
-
-## Main Execution
-In the main block, a random puzzle is created, and its solution is sought using breadth-first search. The path of moves is printed, and the state transitions are displayed step-by-step with user interaction.
+| Date Modified | Version Delta | Change Description                            | Author Initials |
+|---------------|---------------|----------------------------------------------|------------------|
+| 2023-10-01    | 1.0.0        | Initial creation of the Eight Puzzle module. | JD, DK, BM, NH, PA |

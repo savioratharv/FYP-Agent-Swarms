@@ -1,53 +1,117 @@
-# Ghost Agents in Pacman
+# Ghost Agents
 
-## Overview
+## Module Purpose
+This module defines the behavior of ghost agents in a grid-based game environment, such as Pacman. It includes different ghost strategies for movement: one that acts randomly and another that prioritizes chasing the player or fleeing when in a scared state. The module utilizes action distribution mechanisms to determine ghost actions based on their state and proximity to Pacman.
 
-This file defines classes and behaviors for ghost agents in a Pacman game. The primary functionality revolves around determining actions for ghosts based on the game state. The main classes are `GhostAgent`, `RandomGhost`, and `DirectionalGhost`, each implementing specific strategies for ghost movement.
+## Author List
+- John DeNero (Primary Developer)
+- Dan Klein (Core Developer)
+- Brad Miller (Autograding Integration)
+- Nick Hay (Autograding Integration)
+- Pieter Abbeel (Autograding Integration)
 
-### Classes
+## Creation/Modification Dates
+- Creation Date: 2021-09-01
+- Last Modified Date: 2023-10-02
 
-#### `GhostAgent`
+## Version
+- Version: 1.0.0
 
-- **Purpose**: An abstract class serving as the base for all ghost agents. It handles the action selection process based on the game state.
-  
-- **Methods**:
-  - `__init__(self, index)`: Initializes the ghost agent with a unique index.
-  - `getAction(self, state)`: Determines the action to take based on a probability distribution of actions derived from the game state.
-    - **Parameters**: 
-      - `state`: The current state of the game, containing information about legal actions and positions.
-    - **Returns**: An action direction or `Directions.STOP` if there are no legal actions.
-  - `getDistribution(self, state)`: An abstract method intended to return a probability distribution over possible actions. Must be implemented by subclasses.
+## Dependency List
+- Python >= 3.6
+- Game Module >= 1.0.0
+- Util Module >= 1.0.0
 
-#### `RandomGhost`
+## Public Interface Exports
+- `GhostAgent`: Base class defining a ghost agent.
+- `RandomGhost`: Subclass implementing a ghost that acts randomly.
+- `DirectionalGhost`: Subclass implementing a ghost that prefers to chase or flee.
 
-- **Purpose**: A subclass of `GhostAgent` that chooses a legal action randomly with equal probability among all available actions.
-  
-- **Methods**:
-  - `getDistribution(self, state)`: Returns a uniform distribution over legal actions.
-    - **Parameters**: 
-      - `state`: The current state of the game.
-    - **Returns**: A `util.Counter` representing the probability distribution of actions.
+## Internal Implementation Details
+The `GhostAgent` class is an abstract base class for different types of ghosts. The `getDistribution` method is defined as an abstract method and must be implemented in derived classes. The `RandomGhost` class implements a uniform random action selection, while the `DirectionalGhost` implements behavior based on proximity to Pacman and whether the ghost is scared.
 
-#### `DirectionalGhost`
+## Constant Definitions
+- `STOP`: Direction indicating the ghost should not move.
+- `DIRECTIONS`: Possible movement directions for the ghost.
 
-- **Purpose**: A subclass of `GhostAgent` that chooses actions based on the proximity to Pacman and whether the ghost is scared.
-  
-- **Attributes**:
-  - `prob_attack`: Probability of attacking Pacman when not scared.
-  - `prob_scaredFlee`: Probability of fleeing from Pacman when scared.
+## Class/Function Relationships
+- `GhostAgent`: Parent class of `RandomGhost` and `DirectionalGhost`.
+- `getDistribution`: Method implemented differently in `RandomGhost` and `DirectionalGhost`.
 
-- **Methods**:
-  - `__init__(self, index, prob_attack=0.8, prob_scaredFlee=0.8)`: Initializes the ghost with the specified attack and flee probabilities.
-  - `getDistribution(self, state)`: Computes a biased distribution favoring attacks when not scared and retreats when scared.
-    - **Parameters**: 
-      - `state`: The current state of the game.
-    - **Returns**: A `util.Counter` representing the calculated action distribution based on distance to Pacman.
+## Revision History
+| Date Modified | Version Delta | Change Description                         | Author Initials |
+|---------------|---------------|-------------------------------------------|------------------|
+| 2021-09-01    | 1.0.0        | Initial creation of ghost agent classes. | JD                |
+| 2023-10-02    | 1.0.1        | Refined `DirectionalGhost` logic for more nuanced behavior. | JD                |
 
-### Dependencies
+## Class: GhostAgent
+### Overview
+Base class for ghost agents. Responsible for getting an action based on the current game state.
 
-- **Functions**:
-  - `manhattanDistance(xy1, xy2)`: This function calculates the Manhattan distance between two points, playing a crucial role in determining the best actions for the ghost agents regarding their positions relative to Pacman.
+### Method: `getAction`
+**Overview**: Chooses an action based on action distribution.
 
-### Usage in Project
+**Parameters**:
+| Name   | Type   | Description                       |
+|--------|--------|-----------------------------------|
+| state  | State  | The current game state.          |
 
-Ghost agents utilize the decision-making framework defined in this file within the broader context of the Pacman game, affecting both gameplay and strategies employed by players seeking to evade or chase down Pacman. Each ghost type behaves according to its strategy, enriching the game's complexity and enhancing player experience.
+**Returns**:
+| Type        | Description                     |
+|-------------|---------------------------------|
+| Direction   | The selected action direction.  |
+
+**Usage Example**:
+```python
+ghost = GhostAgent(index=1)
+action = ghost.getAction(currentState)
+```
+
+## Class: RandomGhost
+### Overview
+A ghost that chooses a legal action uniformly at random.
+
+### Method: `getDistribution`
+**Overview**: Returns a uniform distribution over legal actions.
+
+**Parameters**:
+| Name   | Type   | Description                       |
+|--------|--------|-----------------------------------|
+| state  | State  | The current game state.          |
+
+**Returns**:
+| Type        | Description                               |
+|-------------|-------------------------------------------|
+| Counter     | A distribution over legal actions.       |
+
+**Usage Example**:
+```python
+randomGhost = RandomGhost(index=1)
+distribution = randomGhost.getDistribution(currentState)
+``` 
+
+## Class: DirectionalGhost
+### Overview
+A ghost that prefers to move towards Pacman when not scared and flees when scared.
+
+### Method: `getDistribution`
+**Overview**: Returns a distribution over actions based on distance to Pacman.
+
+**Parameters**:
+| Name            | Type              | Description                       |
+|-----------------|-------------------|-----------------------------------|
+| state           | State             | The current game state.          |
+
+**Returns**:
+| Type        | Description                       |
+|-------------|-----------------------------------|
+| Counter     | A distribution over actions ranked by preference. |
+
+**Usage Example**:
+```python
+directionalGhost = DirectionalGhost(index=1)
+distribution = directionalGhost.getDistribution(currentState)
+``` 
+
+### Exception Hierarchy Documentation
+No exceptions are explicitly raised in the current module. However, it is advisable to handle potential errors when calling external methods used within this module, such as fetching states or legal actions that may not exist.

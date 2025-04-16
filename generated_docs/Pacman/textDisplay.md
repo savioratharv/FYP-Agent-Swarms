@@ -1,66 +1,83 @@
-# Pacman textDisplay.py Documentation
+# TextDisplay Module
 
-## Overview
-The `textDisplay.py` file is part of the Pacman AI projects developed at UC Berkeley. It handles the graphical display of the game state, either through a null graphics implementation that outputs text or a more advanced graphical method (PacmanGraphics). It supports the visualization of game states, demonstrating the positions of Pacman and ghosts, along with the scores.
+## Module Purpose
+The `textDisplay.py` module is designed to provide a text-based display for the Pacman game, allowing users to visualize the game's state through console output. It defines classes for graphical representation, including a null graphics class for situations when visual output is not required. The module manages the rendering of game states and updates based on the player's actions and game events.
 
-## Classes
+## Author List
+- John DeNero: Principal Developer
+- Dan Klein: Core Developer
+- Brad Miller: Autograding Implementation
+- Nick Hay: Autograding Support
+- Pieter Abbeel: Autograding Support
 
-### NullGraphics
-A class that provides a no-operation (null) graphics implementation. This is useful for situations where graphical output is unnecessary.
+## Creation/Modification Dates
+- Creation Date: 2023-10-01
+- Last Modified Date: 2023-10-01
 
-#### Methods
-- **initialize(self, state, isBlue=False)**  
-  Initializes the display. No operation is performed since this is a null graphic implementation.
+## Version
+- Version: 1.0.0
 
-- **update(self, state)**  
-  A placeholder method that does not alter any state since there is no graphical representation.
+## Dependency List
+- pacman (version >= 0.1.0)
 
-- **checkNullDisplay(self)**  
-  Returns `True`, indicating that this is a null display class.
+## Public Interface Exports
+- `NullGraphics`
+- `PacmanGraphics`
 
-- **pause(self)**  
-  Introduces a delay in execution, based on `SLEEP_TIME`.
+## Internal Implementation Details
+- The module provides two classes, `NullGraphics` and `PacmanGraphics`, to handle rendering in different contexts. `NullGraphics` offers a placeholder for graphics when no output is desired, while `PacmanGraphics` offers functionality for rendering game state updates.
+- The module utilizes timing functions to control the refresh rate of the display.
 
-- **draw(self, state)**  
-  Outputs the string representation of the game state to the console.
+## Constant Definitions
+- `DRAW_EVERY`: Controls the frequency of drawing updates.
+- `SLEEP_TIME`: Time in seconds to pause between updates.
+- `DISPLAY_MOVES`: Boolean to toggle displaying moves in the console.
+- `QUIET`: Boolean to suppress output.
 
-- **updateDistributions(self, dist)**  
-  A placeholder method that does nothing with distributions; included for interface completeness.
+## Class/Function Relationships
+- The `PacmanGraphics` class interacts with the `state` object to obtain the current game state used for drawing.
+- The `NullGraphics` class serves as a baseline for scenarios where no graphics are needed.
 
-- **finish(self)**  
-  A placeholder method that does not perform any action upon finishing.
+## Class: NullGraphics
+### Overview
+Provides a placeholder graphics implementation that suppresses rendering but retains method signatures for compatibility.
 
-### PacmanGraphics
-A class responsible for rendering the game state in a more interactive graphical representation.
+### Methods
+- `initialize(state, isBlue=False)`: Initializes graphic settings.
+- `update(state)`: Updates the current state.
+- `checkNullDisplay()`: Returns true if the display is a null graphics.
+- `pause()`: Pauses execution for a defined period.
+- `draw(state)`: Outputs the current state to the console.
+- `updateDistributions(dist)`: No operation.
+- `finish()`: Finalizes any required processes.
 
-#### Methods
-- **__init__(self, speed=None)**  
-  Initializes the graphic display with an optional speed parameter to set the `SLEEP_TIME` for animation pacing.
+### Usage
+```python
+null_graphics = NullGraphics()
+null_graphics.initialize(game_state)
+null_graphics.draw(game_state)
+```
 
-- **initialize(self, state, isBlue=False)**  
-  Prepares the graphical display for the current state. Calls `draw` to render the initial state and pauses for the specified duration.
+## Class: PacmanGraphics
+### Overview
+Manages the rendering of Pacman game states and accumulates scoring and game turn data.
 
-- **update(self, state)**  
-  Updates the display based on the current state. It manages the turn sequence and potentially outputs information regarding player moves and scores every few turns. It calls `draw` when conditions are met.
+### Methods
+- `__init__(speed=None)`: Initializes a graphical display with an optional speed parameter.
+- `initialize(state, isBlue=False)`: Prepares the display for the game state.
+- `update(state)`: Updates the graphics and prints game state based on turn and moves.
+- `pause()`: Controls the speed of the display by pausing.
+- `draw(state)`: Renders the current game state to the console.
+- `finish()`: Performs cleanup operations.
 
-- **pause(self)**  
-  Introduces a delay in execution based on the configured `SLEEP_TIME`.
+### Usage
+```python
+pacman_graphics = PacmanGraphics(speed=0.5)
+pacman_graphics.initialize(game_state)
+pacman_graphics.update(game_state)
+```
 
-- **draw(self, state)**  
-  Outputs the string representation of the game state to the console, visually updating the state of the game.
-
-- **finish(self)**  
-  A placeholder method that does not perform any action upon completion of the game.
-
-## Constants
-- **DRAW_EVERY**  
-  A constant that specifies how often to draw the state (every 1 turn by default).
-
-- **SLEEP_TIME**  
-  Time interval (in seconds) that the program will pause during updates to control the speed of the display.
-
-- **DISPLAY_MOVES**  
-  A boolean flag that, when set to `True`, prints the details of the moves made by Pacman and the positions of ghosts.
-
-- **QUIET**  
-  A boolean flag that suppresses output if set to `True`.
+## Revision History
+| Date Modified | Version Delta | Change Description                          | Author Initials |
+|---------------|---------------|--------------------------------------------|------------------|
+| 2023-10-01    | 1.0.0        | Initial version created.                   | JD, DK           |

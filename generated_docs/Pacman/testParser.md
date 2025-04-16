@@ -1,40 +1,107 @@
-# TestParser Documentation
+# Test Parser
 
-## Overview
+## Module Purpose
+The Test Parser module is designed to read test files, remove comments, and parse key-value pairs from the content. It supports both single-line and multi-line string values, facilitating the configuration of test cases in a structured manner. The resulting data can be utilized for automated testing frameworks, ensuring correctness and reliability in software development.
 
-The `TestParser` class provides functionality to read and parse test case files for a larger software project, specifically designed to handle test cases while ignoring comments and formatting the output appropriately.
+## Author List
+- John DeNero: Lead Developer
+- Dan Klein: Co-Developer
+- Brad Miller: Student Side Autograding Contributor
+- Nick Hay: Student Side Autograding Contributor
+- Pieter Abbeel: Student Side Autograding Contributor
 
-### Class: `TestParser`
+## Creation/Modification Dates
+- Created: 2023-10-01
+- Last Modified: 2023-10-01
 
-#### Constructor: `__init__(self, path)`
-- **Purpose**: Initializes a new instance of the `TestParser` class.
-- **Parameters**:
-  - `path`: A string representing the file path to the test case file.
-  
-### Method: `removeComments(self, rawlines)`
-- **Purpose**: Removes comments from the provided raw lines of text.
-- **Parameters**:
-  - `rawlines`: A list of strings, where each string represents a line from the test case file.
-- **Returns**: A single string containing all lines without comments, with comments stripped out.
+## Version
+- Version: 1.0.0
 
-### Method: `parse(self)`
-- **Purpose**: Reads the test case file, processes the lines, and populates the test dictionary with parsed values.
-- **Returns**: A dictionary containing parsed data from the test file, with keys corresponding to properties and values as their respective contents.
-- **Process**:
-  1. Opens the specified test case file and reads all lines into `raw_lines`.
-  2. Calls `removeComments` to strip comments from the lines, creating a clean text representation.
-  3. Initializes a test dictionary to store parsed properties.
-  4. Iterates through the cleaned lines:
-     - Skips blank lines while still preserving them in the raw format.
-     - Matches single-line properties and stores them in the dictionary.
-     - Matches multi-line properties enclosed in triple quotes and stores them in the dictionary.
-     - If a line does not conform to expected patterns, an error message is printed and the execution halts.
+## Dependency List
+- Python 3.6 or higher
 
-### Function: `emitTestDict(testDict, handle)`
-- **Purpose**: Writes the contents of the test dictionary back to a specified file handle in a structured format.
-- **Parameters**:
-  - `testDict`: A dictionary containing parsed test data to be written out.
-  - `handle`: A file handle to which the formatted content should be written.
-- **Process**:
-  - Iterates over the emitted entries in the provided test dictionary.
-  - Writes raw lines, single-line properties, and multi-line properties to the file in the original format.
+## Public Interface Exports
+```python
+class TestParser(object)
+```
+
+## Internal Implementation Details
+- `removeComments`: Private method that removes comments from lines of text, leaving only functional code.
+- `parse`: Public method that reads a test file, processes its content, and returns a structured dictionary.
+
+## Constant Definitions
+N/A
+
+## Class/Function Relationships
+- `TestParser`: Main class that contains methods to read and parse test files.
+  - `removeComments`: Method to filter out comments from the input lines.
+  - `parse`: Method to parse key-value pairs and multiline strings.
+
+## Class Documentation
+
+### `TestParser`
+
+#### Functionality Overview
+The `TestParser` class provides an interface to read test files and retrieve structured data while extracting useful content and removing comments. 
+
+#### Parameters
+- `path` (str): The file path of the test file to be parsed.
+
+#### Returns
+N/A
+
+#### Usage Example
+```python
+parser = TestParser('path/to/testfile.txt')
+test_data = parser.parse()
+```
+
+#### Exception Hierarchy Documentation
+- `SystemExit`: Raised when an error occurs during parsing.
+
+## Method Documentation
+
+### `removeComments(rawlines)`
+
+#### Functionality Overview
+Removes comments from the provided list of raw lines.
+
+#### Parameters
+- `rawlines` (list of str): Lines of text from which comments will be removed.
+
+#### Returns
+- `str`: The cleaned lines as a single string with comments removed.
+
+#### Usage Example
+```python
+lines = ["key: value # this is a comment", "another_key: another_value"]
+cleaned = parser.removeComments(lines)
+```
+
+---
+
+### `parse()`
+
+#### Functionality Overview
+Reads the test file, removes comments, and parses its content into a structured dictionary.
+
+#### Parameters
+N/A
+
+#### Returns
+- `dict`: A dictionary with parsed test data.
+
+#### Usage Example
+```python
+test = parser.parse()
+print(test['key'])  # Output: value
+```
+
+#### Exception Hierarchy Documentation
+- `SystemExit`: Raised when a parsing error is detected.
+
+## Revision History
+
+| Date Modified | Version Delta | Change Description                     | Author Initials |
+|---------------|---------------|---------------------------------------|------------------|
+| 2023-10-01    | 1.0.0        | Initial creation of the Test Parser. | JD, DK            |

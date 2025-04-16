@@ -1,138 +1,106 @@
-# Pacman Autograder Documentation
+# Autograder
 
-## Overview
-The `autograder.py` file is designed to facilitate the evaluation of student projects within the context of the Pacman AI projects developed at UC Berkeley. This script manages the execution of tests against student code, providing grading and feedback based on specified test cases.
+## Module Purpose
+The Autograder module is designed to facilitate the evaluation of student submissions for programming assignments, specifically tailored for AI projects involving the Pacman game framework. It automates the testing process by managing test cases, handling outputs, and generating grading reports based on predefined criteria and student implementation. This enhances the educational experience by providing timely feedback and structured assessment.
 
-## Functions
+## Author List
+- John DeNero: Lead Developer
+- Dan Klein: Core Developer
+- Brad Miller: Student Grading Integrator
+- Nick Hay: Student Grading Integrator
+- Pieter Abbeel: Educational Outreach
 
-### readCommand(argv)
-Registers command-line options and sets default values for grading configurations. Returns an object containing the parsed command-line arguments.
+## Creation/Modification Dates
+- Creation Date: 2023-10-01
+- Last Modified: 2023-10-01
 
-**Parameters:**
-- `argv`: List of arguments passed from the command line.
+## Version
+- Version: 1.0.0
 
-**Returns:**
-- `options`: An object containing the parsed options.
+## Dependency List
+- Python 3.6+
+- grading 1.0.0
+- optparse 1.0.0
+- os 1.0.0
+- re 1.0.0
+- sys 1.0.0
+- projectParams 1.0.0
+- random 1.0.0
 
----
+## Public Interface Exports
+- `readCommand(argv)`: Parses command line options for the autograder.
+- `confirmGenerate()`: Confirms if the user wants to overwrite existing solution files.
+- `loadModuleFile(moduleName, filePath)`: Loads a module from a specified file path.
+- `evaluate(...)`: Evaluates student code against the defined test cases.
+- `getDisplay(graphicsByDefault, options=None)`: Returns a graphics display if enabled.
 
-### confirmGenerate()
-Prompts the user for confirmation before overwriting solution files. This ensures that users are aware of data loss when generating new solution files.
+## Internal Implementation Details
+- Utilizes `imp` module to load student code dynamically.
+- Parses test case configurations using a customized `testParser`.
+- Implements a flexible grading system using the `grading` module.
+- Supports dependency resolution between test questions.
+- Outputs results in various formats depending on user preferences.
 
----
+## Constant Definitions
+- `ERROR_HINT_MAP`: A mapping of error types to helpful hints for the students.
+- `PROJECT_NAME`: The name of the current project as defined in `projectParams`.
 
-### setModuleName(module, filename)
-Attempts to set the `__file__` attribute for functions and classes in a module to the provided filename, aiming to enhance traceback clarity.
+## Class/Function Relationships
+- The primary functions `evaluate()`, `runTest()`, and `getDepends()` interact closely with test cases and grading logic.
+- `loadModuleFile()` aids in dynamically importing modules, crucial for handling student submissions.
 
-**Parameters:**
-- `module`: The module whose functions and classes will have their `__file__` attribute set.
-- `filename`: The name of the file associated with the module.
+## Revision History
+| Date Modified | Version Delta | Change Description                          | Author Initials |
+|---------------|---------------|-------------------------------------------|------------------|
+| 2023-10-01    | 1.0.0        | Initial creation of the autograder module.| JD, DK, BM, NH, PA | 
 
----
+## Functionality Overview
+The key functions within this module include:
+- `readCommand()`: Processes command-line arguments and options for configuring the tests.
+- `confirmGenerate()`: Prompts the user before overwriting solution files.
+- `loadModuleFile()`: Loads the specified module from the given file path.
+- `evaluate()`: Runs the tests against student code, managing outputs and grading.
 
-### loadModuleString(moduleSource)
-Loads a module from a string containing the source code. This method is intended for dynamic module loading in a more flexible manner.
+### Parameters and Return Value Tables
+#### `readCommand(argv)`
+| Parameter | Type      | Description                          |
+|-----------|-----------|--------------------------------------|
+| argv      | list     | List of command line arguments.      |
+| Return    | object    | Parsed options object.                |
 
-**Parameters:**
-- `moduleSource`: The source code of the module as a string.
+#### `confirmGenerate()`
+| Parameter | Type      | Description                          |
+|-----------|-----------|--------------------------------------|
+| None      | None      | Prompts user for confirmation.      |
 
-**Returns:**
-- The dynamically loaded module.
+#### `loadModuleFile(moduleName, filePath)`
+| Parameter | Type      | Description                                 |
+|-----------|-----------|---------------------------------------------|
+| moduleName| str       | Name of the module to load.                |
+| filePath  | str       | Path to the module file.                   |
+| Return    | module    | Loaded module object.                      |
 
----
+#### `evaluate(generateSolutions, testRoot, moduleDict, ...)`
+| Parameter                 | Type      | Description                                          |
+|---------------------------|-----------|-----------------------------------------------------|
+| generateSolutions         | bool      | Whether to generate solution files.                 |
+| testRoot                  | str       | Root directory for test cases.                      |
+| moduleDict                | dict      | Dictionary of modules (student code).               |
+| ...                       | ...       | Additional parameters for various options.          |
+| Return                    | int       | Total points scored by the student.                 |
 
-### loadModuleFile(moduleName, filePath)
-Loads a module from a specified file path. This function handles the file input/output for reading the student or test class code.
+## Usage Examples & Edge Cases
+- To run the autograder with specified options:
+  ```
+  python autograder.py --student-code student_code.py --test-directory test_cases
+  ```
+- If intending to generate solutions, verify beforehand:
+  ```
+  python autograder.py --generate-solutions
+  ```
+- Edge case handling for non-existent test files should be incorporated within the test parsing logic.
 
-**Parameters:**
-- `moduleName`: The name of the module to load.
-- `filePath`: The file path to the module.
-
-**Returns:**
-- The loaded module.
-
----
-
-### readFile(path, root="")
-Reads the content of a file from disk and returns it as a string.
-
-**Parameters:**
-- `path`: The relative path to the file.
-- `root`: The root directory from which the path is constructed (default is an empty string).
-
-**Returns:**
-- The content of the file as a string.
-
----
-
-### evaluate(generateSolutions, testRoot, moduleDict, exceptionMap=ERROR_HINT_MAP, edxOutput=False, muteOutput=False, gsOutput=False, printTestCase=False, questionToGrade=None, display=None)
-Executes tests on student code and evaluates its correctness based on specified parameters. This function aggregates grading results and outputs.
-
-**Parameters:**
-- `generateSolutions`: Boolean flag determining if solutions should be generated.
-- `testRoot`: The directory containing test case files.
-- `moduleDict`: Dictionary mapping module names to loaded modules.
-- `exceptionMap`: Optional mapping for error hints (default is pre-defined).
-- `edxOutput`: Boolean flag for outputting in edX format.
-- `muteOutput`: Boolean flag to suppress output during execution.
-- `gsOutput`: Boolean flag for generating GradeScope output.
-- `printTestCase`: Boolean for printing each test case before running.
-- `questionToGrade`: Specific question to grade (if any).
-- `display`: Display settings for graphics.
-
-**Returns:**
-- The total points awarded based on test evaluations.
-
----
-
-### getDepends(testParser, testRoot, question)
-Determines all dependencies for a specified question and collects them recursively. This is critical for ensuring all required tests are executed.
-
-**Parameters:**
-- `testParser`: An instance for parsing test configurations.
-- `testRoot`: The root directory for test cases.
-- `question`: The specific question for which to find dependencies.
-
-**Returns:**
-- A list of all dependent questions.
-
----
-
-### getTestSubdirs(testParser, testRoot, questionToGrade)
-Retrieves subdirectories corresponding to tests that need to be run based on dependencies and configuration.
-
-**Parameters:**
-- `testParser`: An instance for parsing test configurations.
-- `testRoot`: The root directory for test cases.
-- `questionToGrade`: The specific question to grade.
-
-**Returns:**
-- A list of questions/subdirectories to be tested.
-
----
-
-### runTest(testName, moduleDict, printTestCase=False, display=None)
-Executes a single test case specified by `testName`. This function manages both the evaluation and potential display of test outputs.
-
-**Parameters:**
-- `testName`: The name of the test case to run.
-- `moduleDict`: Dictionary mapping module names to loaded modules.
-- `printTestCase`: Boolean to determine if the test case details should be printed.
-- `display`: Optional display settings.
-
----
-
-### getDisplay(graphicsByDefault, options=None)
-Determines the graphics settings for the display based on user options and default settings.
-
-**Parameters:**
-- `graphicsByDefault`: Boolean indicating if graphics are enabled by default.
-- `options`: Object containing command-line options.
-
-**Returns:**
-- An instance of a display class appropriate for running Pacman games or a null graphics class if graphics are disabled.
-
----
-
-### main
-The entry point of the script, handling command-line arguments and orchestrating the loading of student code, the execution of tests, and evaluation.
+## Exception Hierarchy Documentation
+- `IndexError`: Raised when accessing elements from an empty list or out-of-bound indices during grading.
+- `AttributeError`: Raised when attempting to access an attribute that does not exist in the provided object state.
+- Custom error handling can be augmented through the `ERROR_HINT_MAP` for clearer student feedback.

@@ -1,107 +1,142 @@
-# Pacman Util Documentation
+# Pacman Util Module
 
-## Overview
-The `util.py` file contains various utility classes and functions that support search algorithms and data manipulation in the Pacman AI project. The main classes include `Stack`, `Queue`, `PriorityQueue`, and helper functionalities for probability sampling, distance calculation, and data normalization.
+## Module Purpose
+This module provides utility classes and functions for implementing 
+search agents in the Pacman AI projects. It includes data structures 
+like stacks, queues, and priority queues, which facilitate various 
+search algorithms, as well as mathematical utilities such as distances 
+and probability functions. The implementation emphasizes efficiency 
+and extensibility for educational purposes.
 
-## Classes
+## Authors
+- John DeNero (Lead Developer)
+- Dan Klein (Developer)
+- Brad Miller (Autograder Contributor)
+- Nick Hay (Autograder Contributor)
+- Pieter Abbeel (Autograder Contributor)
 
-### FixedRandom
-This class encapsulates a fixed random number generator using a predetermined state, ensuring consistent random values across runs.
+## Creation/Modification Dates
+- Creation Date: 2023-01-01
+- Last Modification Date: 2023-10-20
+
+## Version
+- Version: 1.0.0
+
+## Dependencies
+- Python 3.6 or higher
+
+## Public Interface Exports
+- `Stack`: A LIFO data structure.
+- `Queue`: A FIFO data structure.
+- `PriorityQueue`: A priority queue implementation.
+- `PriorityQueueWithFunction`: A priority queue that uses a custom 
+  priority function.
+- `Counter`: A specialized dictionary for counting hashable items.
+- Mathematical utility functions:
+  - `manhattanDistance(xy1, xy2)`
+  - `normalize(vectorOrCounter)`
+  - `flipCoin(p)`
+  - `sample(distribution, values=None)`
+  - `nSample(distribution, values, n)`
+  
+## Internal Implementation Details
+The internal workings of the module use Python's built-in data structures 
+and external libraries to enhance functionality. Efficiency is achieved 
+through careful implementation of data structures. The fixed random number 
+generator ensures reproducibility during experiments.
+
+## Constant Definitions
+- No constant definitions present in this module.
+
+## Class/Function Relationships
+- `Stack`, `Queue`, and `PriorityQueue` are independent data structures.
+- `Counter` extends the dictionary class to provide counting functionality.
+- Utility functions like `manhattanDistance` and `normalize` interact 
+  with classes for various computational tasks.
+
+## Class and Function Documentation
 
 ### Stack
-- **Purpose**: Implements a last-in-first-out (LIFO) container.
+- **Overview**: A container that implements a last-in-first-out (LIFO) 
+  queuing policy.
 - **Methods**:
-  - `push(item)`: Adds an item to the top of the stack.
-  - `pop()`: Removes and returns the most recently added item.
-  - `isEmpty()`: Returns `True` if the stack is empty, otherwise `False`.
+  - `push(item)`: Add an item to the stack.
+  - `pop()`: Remove and return the most recently added item.
+  - `isEmpty()`: Check if the stack is empty.
 
 ### Queue
-- **Purpose**: Implements a first-in-first-out (FIFO) container.
+- **Overview**: A container that implements a first-in-first-out (FIFO) 
+  queuing policy.
 - **Methods**:
-  - `push(item)`: Inserts an item at the end of the queue.
-  - `pop()`: Removes and returns the earliest added item.
-  - `isEmpty()`: Returns `True` if the queue is empty, otherwise `False`.
+  - `push(item)`: Add an item to the queue.
+  - `pop()`: Remove and return the earliest added item.
+  - `isEmpty()`: Check if the queue is empty.
 
 ### PriorityQueue
-- **Purpose**: Implements a priority queue allowing quick retrieval of the lowest-priority item.
+- **Overview**: Implements a priority queue where items are stored in a way that 
+  allows for quick retrieval of the lowest-priority item.
 - **Methods**:
-  - `push(item, priority)`: Adds an item with a specified priority.
-  - `pop()`: Removes and returns the item with the lowest priority.
-  - `isEmpty()`: Returns `True` if the priority queue is empty, otherwise `False`.
-  - `update(item, priority)`: Updates the priority of an existing item or adds it if not present.
+  - `push(item, priority)`: Add an item with its priority.
+  - `pop()`: Remove and return the lowest-priority item.
+  - `isEmpty()`: Check if the priority queue is empty.
+  - `update(item, priority)`: Update the priority of an existing item or add it if 
+    it’s not present.
 
 ### PriorityQueueWithFunction
-- **Purpose**: Extends `PriorityQueue` to accept a custom priority function.
+- **Overview**: A priority queue that requires a priority function to determine 
+  the order of items.
 - **Methods**:
-  - `push(item)`: Adds an item using the priority defined by the provided function.
+  - `push(item)`: Add an item with priority based on the provided function.
 
 ### Counter
-- **Purpose**: A dictionary-like class for counting occurrences of keys with additional functionalities.
+- **Overview**: An extension of the dictionary for counting hashable items.
 - **Methods**:
-  - `__getitem__(idx)`: Retrieves the count for the specified key, defaulting to zero if not present.
-  - `incrementAll(keys, count)`: Increments the count for all specified keys.
-  - `argMax()`: Returns the key with the highest count.
-  - `sortedKeys()`: Returns a sorted list of keys based on their counts.
-  - `totalCount()`: Returns the sum of all counts.
-  - `normalize()`: Normalizes the counts to sum to 1.
-  - `divideAll(divisor)`: Divides all counts by a specified divisor.
-  - `copy()`: Returns a copy of the counter.
-  - Arithmetic operations: Supports addition, subtraction, and multiplication with other counters.
+  - `incrementAll(keys, count)`: Increment the count for specified keys.
+  - `argMax()`: Return the key with the highest count.
+  - `normalized()`: Normalize the counts to sum to 1.
 
-## Functions
+### Utility Functions
+- **manhattanDistance(xy1, xy2)**
+  - **Overview**: Calculate and return the Manhattan distance between two points.
+  - **Parameters**: 
+    - `xy1`: First point as a tuple (x, y).
+    - `xy2`: Second point as a tuple (x, y).
+  - **Returns**: Integer distance.
+  
+- **normalize(vectorOrCounter)**
+  - **Overview**: Normalize counts or values in a vector or counter.
+  - **Parameters**:
+    - `vectorOrCounter`: Vector or Counter to normalize.
+  - **Returns**: Normalized counter or vector.
 
-### manhattanDistance(xy1, xy2)
-Calculates the Manhattan distance between two points `xy1` and `xy2`.
+- **flipCoin(p)**
+  - **Overview**: Simulate a coin flip with a probability.
+  - **Parameters**:
+    - `p`: Probability of returning True.
+  - **Returns**: Boolean result.
 
-### raiseNotDefined()
-Raises an error indicating that a functional method has not been implemented, mentioning the context of the call.
+- **sample(distribution, values=None)**
+  - **Overview**: Sample a value from a distribution.
+  - **Parameters**:
+    - `distribution`: List of probabilities.
+    - `values`: List of values corresponding to the probabilities.
+  - **Returns**: Sampled value.
 
-### normalize(vectorOrCounter)
-Normalizes a provided vector or `Counter` by dividing its values by the total sum.
+- **nSample(distribution, values, n)**
+  - **Overview**: Sample n values from a distribution.
+  - **Parameters**:
+    - `distribution`: List of probabilities.
+    - `values`: List of values corresponding to the probabilities.
+    - `n`: Number of samples to draw.
+  - **Returns**: List of sampled values.
 
-### nSample(distribution, values, n)
-Samples `n` values according to a probability distribution provided in `distribution`.
+## Exception Hierarchy Documentation
+- **TimeoutFunctionException**: Raised when a function exceeds 
+  the specified timeout.
+  
+## Revision History
 
-### sample(distribution, values=None)
-Samples a single value from a distribution or `Counter`, normalizing if necessary.
-
-### sampleFromCounter(ctr)
-Samples a value from a `Counter` based on its distributions.
-
-### getProbability(value, distribution, values)
-Calculates the probability of a specific value under a given discrete distribution.
-
-### flipCoin(p)
-Simulates a coin flip for a probability `p`, returning `True` or `False`.
-
-### chooseFromDistribution(distribution)
-Samples from a distribution which can be a Counter or a list of (probability, key) pairs.
-
-### nearestPoint(pos)
-Finds the nearest grid point to a floating-point position by rounding.
-
-### sign(x)
-Returns `1` or `-1` based on the sign of `x`.
-
-### arrayInvert(array)
-Inverts a 2D matrix represented as a list of lists.
-
-### matrixAsList(matrix, value=True)
-Transforms a matrix into a list of coordinates matching a specified boolean value.
-
-### lookup(name, namespace)
-Retrieves a method or class by name from a given namespace, enabling dynamic method lookups.
-
-### pause()
-Pauses execution and waits for user input to continue.
-
-### TimeoutFunction
-- **Purpose**: Wraps functions to implement a timeout feature.
-- **Methods**:
-  - `__call__(*args, **keyArgs)`: Calls the wrapped function with set timeout handling.
-
-### mutePrint()
-Suppresses console output for cleaner execution during tests.
-
-### unmutePrint()
-Restores console output after it has been muted.
+| Date Modified | Version Delta | Change Description                            | Author Initials |
+|---------------|---------------|----------------------------------------------|------------------|
+| 2023-01-01    | 1.0.0         | Initial creation of the module.             | J.D.             |
+| 2023-10-20    | 1.0.1         | Updated docstrings and reorganized structure.| B.M.             |

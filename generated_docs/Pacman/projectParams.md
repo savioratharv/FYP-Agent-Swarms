@@ -1,29 +1,60 @@
-# projectParams.py Documentation
+# Project Name: Project 1: Search
 
-## Overview
-The `projectParams.py` file is a configuration file that sets up various parameters for the Pacman AI projects as developed at UC Berkeley. The file primarily defines constants that are used across multiple components of the project.
+## Module Purpose
+The `projectParams.py` module serves as a configuration file for the Pacman AI projects developed at UC Berkeley. It defines essential parameters required for the operation of search algorithms, including project-specific settings and module references needed for educational purposes. This file helps streamline the codebase by holding project-level constants and defaults, ensuring organization and clarity throughout various implementations.
 
-## Constants
+## Author List
+- John DeNero - Project Lead
+- Dan Klein - Co-Developer
+- Brad Miller - Student Autograder Development
+- Nick Hay - Student Autograder Development
+- Pieter Abbeel - Student Autograder Development
 
-### STUDENT_CODE_DEFAULT
-- **Type**: String
-- **Value**: `'searchAgents.py,search.py'`
-- **Description**: This constant holds the default filenames for the student code files that will be used for grading purposes. It specifies the main search-related files where the student's implementation is expected to reside.
+## Creation/Modification Dates
+- Created: 2023-10-01
+- Last Modified: 2023-10-01
+
+## Version
+- Version: 1.0.0
+
+## Dependency List
+- Python >= 3.6
+
+## Public Interface Exports
+- `STUDENT_CODE_DEFAULT`
+- `PROJECT_TEST_CLASSES`
+- `PROJECT_NAME`
+- `BONUS_PIC`
+
+## Internal Implementation Details
+The module largely serves as a constants holder and does not define complex functions or classes. Each parameter is designed to provide specifications clearly without processing logic.
+
+## Constant Definitions
+### STUIDENT_CODE_DEFAULT
+Default file names for student code submissions.
+- Type: `str`
+- Example: 'searchAgents.py,search.py'
 
 ### PROJECT_TEST_CLASSES
-- **Type**: String
-- **Value**: `'searchTestClasses.py'`
-- **Description**: This constant contains the name of the file that includes the test classes for validating the student's implementations. It serves as a reference point for the autograder to check the functionality of search algorithms.
+Test classes module reference.
+- Type: `str`
+- Example: 'searchTestClasses.py'
 
 ### PROJECT_NAME
-- **Type**: String
-- **Value**: `'Project 1: Search'`
-- **Description**: This constant names the project, indicating that it is the first project in a series focused on search algorithms within the Pacman game context. This is helpful for user context and clarity about the project's purpose.
+The name framing the current project.
+- Type: `str`
+- Example: 'Project 1: Search'
 
 ### BONUS_PIC
-- **Type**: Boolean
-- **Value**: `False`
-- **Description**: This boolean constant indicates whether a bonus picture is available for the project. A value of `False` suggests that there are no additional bonus features accessible in the current setup. 
+Flag indicating the availability of a bonus picture.
+- Type: `bool`
+- Example: `False`
 
-## Note
-This file serves as a foundational setup for the larger Pacman AI projects and should be modified with caution to maintain consistency across the project.
+## Class/Function Relationships
+This file does not contain classes or functions; it merely defines constants for use in other modules related to the Pacman AI project.
+
+## Revision History
+
+| Date Modified | Version Delta | Change Description                                   | Author Initials |
+|---------------|---------------|-----------------------------------------------------|------------------|
+| 2023-10-01    | 1.0.0        | Initial creation of project parameter definitions.  | JD, DK           |
