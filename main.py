@@ -3,12 +3,14 @@ from dotenv import load_dotenv
 load_dotenv()
 from openai import OpenAI
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from create_graph import build_dependency_graph, visualize_dependency_graph
+from create_graph import build_dependency_graph
 from level_segregation import segregate_levels
 import multiprocessing
 import ast
 import astor
 import time
+from pyvis.network import Network
+import networkx as nx
 
 def extract_text_from_file(file_path):
     try:
@@ -139,7 +141,7 @@ def process_node(node, project_root, dependencies):
         )
         history.append(response_func.choices[0].message)
         doc = f'"""{response_func.choices[0].message.content.strip()}"""'
-        time.sleep(10)
+        time.sleep(20)
         return doc
 
     class DocstringInserter(ast.NodeTransformer):
@@ -201,7 +203,7 @@ def process_node(node, project_root, dependencies):
                 history.append(response_func.choices[0].message)
                 summary_text = response_func.choices[0].message.content.strip()
                 func_summaries_for_parent[func] = summary_text
-                time.sleep(10)
+                time.sleep(30)
             if node_function_summaries.get(parent) is None:
                 node_function_summaries[parent] = func_summaries_for_parent
             else:
@@ -216,9 +218,23 @@ def main():
         print("Invalid directory. Please check the path.")
         return
     graph = build_dependency_graph(project_root)
+
+    visualize_graph = graph
+
     print("Nodes:", graph.nodes)
     print("Edges:", graph.edges)
-    visualize_dependency_graph(graph)
+
+    for u, v, data in visualize_graph.edges(data=True):
+        for key in data:
+            if isinstance(data[key], set):
+                data[key] = list(data[key])
+            
+    # Plot with pyvis
+    net = Network(
+        directed = True
+    )
+    net.from_nx(visualize_graph) # Create directly from nx graph
+    net.save_graph(f'{project_root}.html')
 
     print(graph)
 
@@ -228,18 +244,36 @@ def main():
     print("Levels:", levels)
     print("Dependencies:", dependencies)
     
+    # Map node names to pyvis node ids (usually the same as the node name)
+    node_id_map = {str(node): str(node) for node in graph.nodes}
+
     for level in levels:
         print(f"Processing level {level} ...")
         curr_level = list(levels[level])
 
+        # Set current level nodes to orange before processing
+        for n in net.nodes:
+            if n['id'] in curr_level:
+                n['color'] = 'orange'
+        net.save_graph(f'{project_root}.html')
+
         # Use ThreadPoolExecutor for parallel processing
         with ThreadPoolExecutor() as executor:
-            futures = [executor.submit(process_node, node, project_root, dependencies) for node in curr_level]
+            futures = {executor.submit(process_node, node, project_root, dependencies): node for node in curr_level}
             for future in as_completed(futures):
+                node = futures[future]
                 print(future.result())
+                # Update node color in pyvis to green after processing
+                for n in net.nodes:
+                    if n['id'] == node:
+                        n['color'] = 'green'
+                net.save_graph(f'{project_root}.html')
         print(f"Completed processing level {level}.")
         print("Agents sleeping for 60 seconds to avoid rate limits.")
         time.sleep(60)
+
+    # Save final graph
+    
 
 if __name__ == "__main__":
     main()

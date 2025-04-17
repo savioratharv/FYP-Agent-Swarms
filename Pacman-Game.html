@@ -1,0 +1,155 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 600px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "green", "id": "Pacman\\grading.py", "label": "Pacman\\grading.py", "shape": "dot", "size": 10}, {"color": "green", "id": "Pacman\\autograder.py", "label": "Pacman\\autograder.py", "shape": "dot", "size": 10}, {"color": "green", "id": "Pacman\\projectParams.py", "label": "Pacman\\projectParams.py", "shape": "dot", "size": 10}, {"color": "green", "id": "Pacman\\pacman.py", "label": "Pacman\\pacman.py", "shape": "dot", "size": 10}, {"color": "green", "id": "Pacman\\pacmanAgents.py", "label": "Pacman\\pacmanAgents.py", "shape": "dot", "size": 10}, {"color": "green", "id": "Pacman\\searchTestClasses.py", "label": "Pacman\\searchTestClasses.py", "shape": "dot", "size": 10}, {"color": "green", "id": "Pacman\\textDisplay.py", "label": "Pacman\\textDisplay.py", "shape": "dot", "size": 10}, {"color": "green", "id": "Pacman\\testParser.py", "label": "Pacman\\testParser.py", "shape": "dot", "size": 10}, {"color": "green", "id": "Pacman\\testClasses.py", "label": "Pacman\\testClasses.py", "shape": "dot", "size": 10}, {"color": "green", "id": "Pacman\\graphicsDisplay.py", "label": "Pacman\\graphicsDisplay.py", "shape": "dot", "size": 10}, {"color": "green", "id": "Pacman\\search.py", "label": "Pacman\\search.py", "shape": "dot", "size": 10}, {"color": "green", "id": "Pacman\\eightpuzzle.py", "label": "Pacman\\eightpuzzle.py", "shape": "dot", "size": 10}, {"color": "green", "id": "Pacman\\searchAgents.py", "label": "Pacman\\searchAgents.py", "shape": "dot", "size": 10}, {"color": "green", "id": "Pacman\\util.py", "label": "Pacman\\util.py", "shape": "dot", "size": 10}, {"color": "green", "id": "Pacman\\game.py", "label": "Pacman\\game.py", "shape": "dot", "size": 10}, {"color": "green", "id": "Pacman\\ghostAgents.py", "label": "Pacman\\ghostAgents.py", "shape": "dot", "size": 10}, {"color": "green", "id": "Pacman\\layout.py", "label": "Pacman\\layout.py", "shape": "dot", "size": 10}, {"color": "green", "id": "Pacman\\keyboardAgents.py", "label": "Pacman\\keyboardAgents.py", "shape": "dot", "size": 10}, {"color": "green", "id": "Pacman\\graphicsUtils.py", "label": "Pacman\\graphicsUtils.py", "shape": "dot", "size": 10}]);
+                  edges = new vis.DataSet([{"arrows": "to", "from": "Pacman\\grading.py", "imported_functions": [], "to": "Pacman\\autograder.py", "width": 1}, {"arrows": "to", "from": "Pacman\\projectParams.py", "imported_functions": [], "to": "Pacman\\autograder.py", "width": 1}, {"arrows": "to", "from": "Pacman\\pacman.py", "imported_functions": ["GameState"], "to": "Pacman\\autograder.py", "width": 1}, {"arrows": "to", "from": "Pacman\\pacman.py", "imported_functions": ["Directions"], "to": "Pacman\\pacmanAgents.py", "width": 1}, {"arrows": "to", "from": "Pacman\\pacman.py", "imported_functions": [], "to": "Pacman\\searchTestClasses.py", "width": 1}, {"arrows": "to", "from": "Pacman\\pacman.py", "imported_functions": [], "to": "Pacman\\textDisplay.py", "width": 1}, {"arrows": "to", "from": "Pacman\\testParser.py", "imported_functions": [], "to": "Pacman\\autograder.py", "width": 1}, {"arrows": "to", "from": "Pacman\\testClasses.py", "imported_functions": [], "to": "Pacman\\autograder.py", "width": 1}, {"arrows": "to", "from": "Pacman\\testClasses.py", "imported_functions": [], "to": "Pacman\\searchTestClasses.py", "width": 1}, {"arrows": "to", "from": "Pacman\\textDisplay.py", "imported_functions": [], "to": "Pacman\\autograder.py", "width": 1}, {"arrows": "to", "from": "Pacman\\textDisplay.py", "imported_functions": [], "to": "Pacman\\pacman.py", "width": 1}, {"arrows": "to", "from": "Pacman\\graphicsDisplay.py", "imported_functions": [], "to": "Pacman\\autograder.py", "width": 1}, {"arrows": "to", "from": "Pacman\\graphicsDisplay.py", "imported_functions": [], "to": "Pacman\\pacman.py", "width": 1}, {"arrows": "to", "from": "Pacman\\search.py", "imported_functions": [], "to": "Pacman\\eightpuzzle.py", "width": 1}, {"arrows": "to", "from": "Pacman\\search.py", "imported_functions": [], "to": "Pacman\\searchAgents.py", "width": 1}, {"arrows": "to", "from": "Pacman\\search.py", "imported_functions": ["SearchProblem"], "to": "Pacman\\searchTestClasses.py", "width": 1}, {"arrows": "to", "from": "Pacman\\util.py", "imported_functions": ["*"], "to": "Pacman\\game.py", "width": 1}, {"arrows": "to", "from": "Pacman\\util.py", "imported_functions": ["manhattanDistance"], "to": "Pacman\\ghostAgents.py", "width": 1}, {"arrows": "to", "from": "Pacman\\util.py", "imported_functions": [], "to": "Pacman\\grading.py", "width": 1}, {"arrows": "to", "from": "Pacman\\util.py", "imported_functions": ["manhattanDistance"], "to": "Pacman\\layout.py", "width": 1}, {"arrows": "to", "from": "Pacman\\util.py", "imported_functions": ["nearestPoint", "manhattanDistance"], "to": "Pacman\\pacman.py", "width": 1}, {"arrows": "to", "from": "Pacman\\util.py", "imported_functions": [], "to": "Pacman\\pacmanAgents.py", "width": 1}, {"arrows": "to", "from": "Pacman\\util.py", "imported_functions": ["Queue", "PriorityQueue", "Stack"], "to": "Pacman\\search.py", "width": 1}, {"arrows": "to", "from": "Pacman\\util.py", "imported_functions": ["manhattanDistance"], "to": "Pacman\\searchAgents.py", "width": 1}, {"arrows": "to", "from": "Pacman\\game.py", "imported_functions": ["Actions", "Directions", "Agent"], "to": "Pacman\\ghostAgents.py", "width": 1}, {"arrows": "to", "from": "Pacman\\game.py", "imported_functions": ["Directions"], "to": "Pacman\\graphicsDisplay.py", "width": 1}, {"arrows": "to", "from": "Pacman\\game.py", "imported_functions": ["Directions", "Agent"], "to": "Pacman\\keyboardAgents.py", "width": 1}, {"arrows": "to", "from": "Pacman\\game.py", "imported_functions": ["Directions", "Grid"], "to": "Pacman\\layout.py", "width": 1}, {"arrows": "to", "from": "Pacman\\game.py", "imported_functions": ["Actions", "Directions", "GameStateData", "Game"], "to": "Pacman\\pacman.py", "width": 1}, {"arrows": "to", "from": "Pacman\\game.py", "imported_functions": ["Agent"], "to": "Pacman\\pacmanAgents.py", "width": 1}, {"arrows": "to", "from": "Pacman\\game.py", "imported_functions": ["Directions"], "to": "Pacman\\search.py", "width": 1}, {"arrows": "to", "from": "Pacman\\game.py", "imported_functions": ["Actions", "Directions", "Agent"], "to": "Pacman\\searchAgents.py", "width": 1}, {"arrows": "to", "from": "Pacman\\game.py", "imported_functions": ["Actions", "Directions"], "to": "Pacman\\searchTestClasses.py", "width": 1}, {"arrows": "to", "from": "Pacman\\ghostAgents.py", "imported_functions": [], "to": "Pacman\\pacman.py", "width": 1}, {"arrows": "to", "from": "Pacman\\graphicsUtils.py", "imported_functions": ["*"], "to": "Pacman\\graphicsDisplay.py", "width": 1}, {"arrows": "to", "from": "Pacman\\graphicsUtils.py", "imported_functions": ["keys_pressed", "keys_waiting"], "to": "Pacman\\keyboardAgents.py", "width": 1}, {"arrows": "to", "from": "Pacman\\layout.py", "imported_functions": [], "to": "Pacman\\pacman.py", "width": 1}, {"arrows": "to", "from": "Pacman\\layout.py", "imported_functions": [], "to": "Pacman\\searchTestClasses.py", "width": 1}, {"arrows": "to", "from": "Pacman\\pacmanAgents.py", "imported_functions": [], "to": "Pacman\\pacman.py", "width": 1}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>

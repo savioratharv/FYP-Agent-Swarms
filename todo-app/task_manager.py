@@ -1,69 +1,102 @@
 # """
-# Task Manager Module Documentation
+# task_manager.py
 # 
-# Module Name: task_manager.py
-# 
-# Description:
-# This module defines the TaskManager class, which provides functionalities to manage a list of tasks.
-# The primary operations include adding, removing, and listing tasks. The tasks are persisted using 
-# external functions for saving and loading from a JSON file. This module operates within a larger 
-# software application that manages user-defined tasks.
+# This module defines the TaskManager class, which provides functionality to manage a list of tasks. This includes adding, removing, and listing tasks. The TaskManager relies on external functions to load and save tasks to a JSON file, facilitating persistent storage across sessions.
 # 
 # Classes:
-# - TaskManager: A class responsible for managing a list of tasks. It provides methods to add, 
-#   remove, and list tasks, closely integrating with external storage functionalities.
+#     TaskManager: A class that manages tasks, allowing the user to add, remove, and list tasks.
 # 
-# Methods:
-# - __init__(self):
-#     Initializes a new instance of the TaskManager class. On instantiation, it loads tasks from 
-#     an external JSON file using the load_tasks function. The tasks are stored in an instance 
-#     variable for internal management.
+# TaskManager Class:
+#     __init__(self):
+#         Initializes the TaskManager instance by loading tasks from a JSON file.
 # 
-# - add_task(self, task):
-#     Adds a new task to the internal task list.
+#         This constructor initializes the TaskManager by retrieving any previously saved tasks from 'tasks.json'. 
+#         If the file contains invalid JSON or does not exist, an empty list of tasks is created.
+# 
+#         Parameters:
+#             self: The instance of TaskManager being created.
+# 
+#         Returns:
+#             None
+# 
+#         Usage Example:
+#             >>> task_manager = TaskManager()
+#             >>> print(task_manager.tasks)  # Output may vary based on saved tasks
 #     
-#     Parameters:
-#     task (str): A string representing the task to be added. 
+#     add_task(self, task):
+#         Adds a new task to the list of tasks.
 # 
-#     This method appends the task to the list, saves the updated task list to the external 
-#     JSON file using the save_tasks function, and provides feedback to the user indicating that 
-#     the task has been successfully added.
+#         This method appends the specified task to the internal list of tasks and saves the updated list to a JSON file. 
+#         It also prints a confirmation message indicating that the task has been successfully added.
 # 
-# - remove_task(self, task):
-#     Removes a specified task from the internal task list if it exists.
+#         Parameters:
+#             self: The instance of TaskManager in which the task is being added.
+#             task (str): The description of the task to be added.
 # 
-#     Parameters:
-#     task (str): A string representing the task to be removed. 
-#     
-#     This method checks if the specified task is present in the internal task list. If found, 
-#     it removes the task, updates the task list in the external JSON file using the save_tasks 
-#     function, and provides feedback to the user. If the task is not found, it informs the user 
-#     that the task does not exist.
+#         Returns:
+#             None
 # 
-# - list_tasks(self):
-#     Displays all tasks currently in the internal task list.
+#         Usage Example:
+#             >>> task_manager = TaskManager()
+#             >>> task_manager.add_task('Buy groceries')
+#             Task 'Buy groceries' added.
+#             >>> print(task_manager.tasks)
+#             ['Buy groceries']
 # 
-#     This method calls the display_tasks function to present the tasks in a clear, enumerated 
-#     format. If no tasks are available, it informs the user that there are no tasks to display.
+#     remove_task(self, task):
+#         Removes a specified task from the list of tasks.
 # 
-# Dependencies:
-# This module relies on the following external functions defined in other files:
-# - display_tasks: A function that takes a list of tasks and prints them to the console in a 
-#   clear format.
-# - save_tasks: A function that saves the current list of tasks to a JSON file.
-# - load_tasks: A function that retrieves the list of tasks from a JSON file.
+#         This method checks if the given task exists in the internal list of tasks. 
+#         If the task is found, it is removed, and the updated list is saved to a JSON file. 
+#         If the task is not found, an error message is printed.
 # 
-# Usage Example:
-# To use the TaskManager, create an instance and call its methods to manage tasks:
-#     
-#     manager = TaskManager()
-#     manager.add_task("Complete project report")
-#     manager.list_tasks()
-#     manager.remove_task("Complete project report")
-#     manager.list_tasks()
+#         Parameters:
+#             self: The instance of TaskManager in which the task is being removed.
+#             task (str): The description of the task to be removed.
 # 
-# This documentation follows the IEEE 1016 standard for software design documentation and adheres 
-# to the GNU coding standards for consistency.
+#         Returns:
+#             None
+# 
+#         Usage Example:
+#             >>> task_manager = TaskManager()
+#             >>> task_manager.add_task('Complete project')
+#             Task 'Complete project' added.
+#             >>> task_manager.remove_task('Complete project')
+#             Task 'Complete project' removed.
+#             >>> print(task_manager.tasks)
+#             []
+# 
+#     list_tasks(self):
+#         Displays all existing tasks to the user.
+# 
+#         This method retrieves the current list of tasks and, if available, calls the 
+#         external function `display_tasks` to print them in a numbered format. 
+#         If there are no tasks, it prints a message indicating that no tasks are available.
+# 
+#         Parameters:
+#             self: The instance of TaskManager from which tasks are being listed.
+# 
+#         Returns:
+#             None
+# 
+#         Usage Example:
+#             >>> task_manager = TaskManager()
+#             >>> task_manager.add_task('Write report')
+#             Task 'Write report' added.
+#             >>> task_manager.list_tasks()
+#             Your Tasks:
+#             1. Write report
+# 
+# External Functions:
+# The TaskManager class uses the following functions defined in other files:
+# 
+# - display_tasks(tasks): Displays a list of tasks in a numbered format. This function is essential for presenting tasks to the user in an organized and clear manner.
+# 
+# - load_tasks(): Loads a list of tasks from a JSON file named 'tasks.json'. If the file does not exist or contains invalid JSON, it returns an empty list.
+# 
+# - save_tasks(tasks): Saves a list of tasks to a JSON file named 'tasks.json'. This function writes the provided list in JSON format, overwriting any existing data in the file.
+# 
+# This module facilitates efficient task management by allowing users to create, delete, and view tasks while ensuring data persistence.
 # """
 
 from storage import save_tasks, load_tasks
@@ -74,47 +107,45 @@ class TaskManager:
 
     def __init__(self):
         """
- Initializes a new instance of the TaskManager class.
+    __init__(self):
+        Initialize the TaskManager instance by loading tasks from a JSON file.
 
- This constructor method loads tasks from an external JSON file using the `load_tasks` 
- function and stores them in an instance variable for further management. This setup 
- allows the TaskManager to operate with the previously saved tasks upon instantiation.
+        This constructor initializes the TaskManager by retrieving any previously saved tasks from 'tasks.json'. 
+        If the file contains invalid JSON or does not exist, an empty list of tasks is created.
 
- Parameters:
- None
+        Parameters:
+            self: The instance of TaskManager being created. 
 
- Returns:
- None: This method does not return any value. It initializes the TaskManager instance 
-       and populates the task list.
+        Returns:
+            None
 
- Usage Example:
- >>> manager = TaskManager()
- >>> print(manager.tasks)  # Output will depend on the contents of 'tasks.json'
+        Usage Example:
+            >>> task_manager = TaskManager()
+            >>> print(task_manager.tasks)  # Output may vary based on saved tasks
 """
         self.tasks = load_tasks()
 
     def add_task(self, task):
         """
- Adds a new task to the internal task list.
+    add_task(self, task):
+        Add a new task to the list of tasks.
 
- This method appends a specified task to the list of current tasks and saves 
- the updated task list to an external JSON file using the `save_tasks` 
- function. It also provides feedback to the user about the operation's 
- success.
+        This method appends the specified task to the internal list of tasks and saves the updated list to a JSON file. 
+        It also prints a confirmation message indicating that the task has been successfully added.
 
- Parameters:
- task (str): A string representing the task description to be added to the 
-              task list.
+        Parameters:
+            self: The instance of TaskManager in which the task is being added.
+            task (str): The description of the task to be added.
 
- Returns:
- None: This method does not return any value. It performs an operation that 
-       modifies the internal task list and the external storage.
+        Returns:
+            None
 
- Usage Example:
- >>> manager = TaskManager()
- >>> manager.add_task("Complete the project report")
- Task 'Complete the project report' added.
- >>> print(manager.tasks)  # This will show the updated task list including the new task
+        Usage Example:
+            >>> task_manager = TaskManager()
+            >>> task_manager.add_task('Buy groceries')
+            Task 'Buy groceries' added.
+            >>> print(task_manager.tasks)
+            ['Buy groceries']
 """
         self.tasks.append(task)
         save_tasks(self.tasks)
@@ -122,28 +153,28 @@ class TaskManager:
 
     def remove_task(self, task):
         """
- Removes a specified task from the internal task list if it exists.
+    remove_task(self, task):
+        Remove a specified task from the list of tasks.
 
- This method checks for the presence of the provided task in the list of current 
- tasks. If the task is found, it removes the task from the list and saves 
- the updated task list to an external JSON file using the `save_tasks` function. 
- The method also provides feedback to the user about the operation's success or 
- failure.
+        This method checks if the given task exists in the internal list of tasks. 
+        If the task is found, it is removed, and the updated list is saved to a JSON file. 
+        If the task is not found, an error message is printed.
 
- Parameters:
- task (str): A string representing the task description to be removed from 
-              the task list.
+        Parameters:
+            self: The instance of TaskManager in which the task is being removed.
+            task (str): The description of the task to be removed.
 
- Returns:
- None: This method does not return any value. It performs an operation that 
-       modifies the internal task list and the external storage.
+        Returns:
+            None
 
- Usage Example:
- >>> manager = TaskManager()
- >>> manager.add_task("Complete the project report")
- >>> manager.remove_task("Complete the project report")
- Task 'Complete the project report' removed.
- >>> print(manager.tasks)  # This will show the updated task list without the removed task
+        Usage Example:
+            >>> task_manager = TaskManager()
+            >>> task_manager.add_task('Complete project')
+            Task 'Complete project' added.
+            >>> task_manager.remove_task('Complete project')
+            Task 'Complete project' removed.
+            >>> print(task_manager.tasks)
+            []
 """
         if task in self.tasks:
             self.tasks.remove(task)
@@ -154,25 +185,26 @@ class TaskManager:
 
     def list_tasks(self):
         """
- Displays all tasks currently in the internal task list.
+    list_tasks(self):
+        Display all existing tasks to the user.
 
- This method checks the internal task list and uses the `display_tasks` function 
- to present the tasks in a clear, enumerated format. If no tasks are available, 
- it informs the user that there are no tasks to display.
+        This method retrieves the current list of tasks and, if available, calls the 
+        external function `display_tasks` to print them in a numbered format. 
+        If there are no tasks, it prints a message indicating that no tasks are available.
 
- Parameters:
- None
+        Parameters:
+            self: The instance of TaskManager from which tasks are being listed.
 
- Returns:
- None: This method does not return any value. It performs an operation that 
-       outputs task information to the console.
+        Returns:
+            None
 
- Usage Example:
- >>> manager = TaskManager()
- >>> manager.add_task("Complete the project report")
- >>> manager.list_tasks()
- Your Tasks:
- 1. Complete the project report
+        Usage Example:
+            >>> task_manager = TaskManager()
+            >>> task_manager.add_task('Write report')
+            Task 'Write report' added.
+            >>> task_manager.list_tasks()
+            Your Tasks:
+            1. Write report
 """
         if self.tasks:
             display_tasks(self.tasks)

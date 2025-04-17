@@ -78,7 +78,7 @@ def visualize_dependency_graph(graph):
     """Visualize the dependency graph using matplotlib and networkx."""
     plt.figure(figsize=(10, 6))
 
-    pos = nx.spring_layout(graph, seed=42)  # Position nodes using spring layout
+    pos = nx.shell_layout(graph, seed=42)  # Position nodes using spring layout
     nx.draw(graph, pos, with_labels=True, node_color='lightblue', edge_color='gray', node_size=3000, font_size=10, font_weight="bold", arrows=True)
 
     plt.title("Python Project Dependency Graph")

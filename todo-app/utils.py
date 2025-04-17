@@ -1,57 +1,64 @@
-# File Name: utils.py
-# 
-# Description: 
-# This module provides utility functions to assist with task management within an application. The primary function included is display_tasks, which is responsible for displaying a list of tasks to the user in a numbered format.
-# 
-# Function Documentation:
-# 
-# 1. Function Name: display_tasks
-#    Purpose: 
-#    Displays a list of tasks to the user with each task enumerated. This function enhances user interaction by presenting tasks in a clear and organized manner.
-# 
-#    Parameters:
-#    - tasks (list): A list of strings, where each string represents a task. This list must be non-empty and contain valid string elements.
-# 
-#    Returns: 
-#    This function does not return any value. It outputs the tasks to the standard output.
-# 
-#    Description of Behavior: 
-#    The function prints a header "Your Tasks:" followed by the list of tasks. Each task is prefixed with its corresponding number, beginning with 1. The enumeration aids in identifying each task easily, facilitating user tasks management.
-# 
-#    Example:
-#    If the input list of tasks is ["Task 1", "Task 2", "Task 3"], the output will be:
-#    Your Tasks:
-#    1. Task 1
-#    2. Task 2
-#    3. Task 3
-# 
-# Notes:
-# - It is important that the 'tasks' list is properly formatted and does not contain any non-string types to avoid unexpected results.
-# - This function is designed to be called after the tasks are defined and populated, ensuring that the user sees the most current task list.
+# # File Name: utils.py
+# # 
+# # Description:
+# # This module provides utility functions for task management, specifically for displaying tasks in a formatted manner. It includes a function to enumerate and print a list of tasks, facilitating user interaction within a task management application.
+# # 
+# # Function List:
+# # 1. display_tasks(tasks: list) -> None
+# #    - Description: Prints the list of tasks to the console in a numbered format.
+# #    - Parameters:
+# #      - tasks (list): A list of strings representing the tasks to be displayed.
+# #    - Return Type: None
+# #    - Example Usage:
+# #      Given a list of tasks, the function will print each task preceded by its corresponding number.
+# # 
+# # Standards Compliance:
+# # This file adheres to the IEEE 1016 standards for structured documentation and follows the GNU coding standards for clarity and consistency in coding practices. All technical terms are defined, and language is kept simple to ensure comprehensibility for users of varying technical backgrounds. 
+# # 
+# # Function Documentation:
+# # def display_tasks(tasks):
+# #     """
+# #     Displays a list of tasks in a numbered format.
+# #     
+# #     This function takes a list of tasks and prints each task to the console, 
+# #     preceded by its corresponding number. It is designed to provide an organized 
+# #     view of tasks for better readability.
+# #     
+# #     Parameters:
+# #         tasks (list): A list of strings representing the tasks to be displayed.
+# #     
+# #     Returns:
+# #         None
+# #     
+# #     Example:
+# #         >>> tasks = ['Buy groceries', 'Complete homework', 'Walk the dog']
+# #         >>> display_tasks(tasks)
+# #         1. Buy groceries
+# #         2. Complete homework
+# #         3. Walk the dog
+# #     """
 
 def display_tasks(tasks):
-    """def display_tasks(tasks):
-    ""\"Display a numbered list of tasks.
-
-    This function takes a list of tasks and prints them to the console in a 
-    clear, enumerated format, allowing users to easily view and manage their tasks.
-
-    Parameters:
-    tasks (list of str): A list of task descriptions, where each task is a 
-                         string. The list must be non-empty.
-
-    Returns:
-    None: This function does not return a value; it prints the tasks directly 
-          to standard output.
-
-    Example:
-    >>> tasks = ["Finish report", "Email client", "Prepare presentation"]
-    >>> display_tasks(tasks)
-    Your Tasks:
-    1. Finish report
-    2. Email client
-    3. Prepare presentation
     """
+Displays a list of tasks in a numbered format.
+
+This function takes a list of tasks and prints each task to the console, 
+preceded by its corresponding number. It is designed to provide an organized 
+view of tasks for better readability.
+
+Parameters:
+    tasks (list): A list of strings representing the tasks to be displayed.
+
+Returns:
+    None
+
+Example:
+    >>> tasks = ['Buy groceries', 'Complete homework', 'Walk the dog']
+    >>> display_tasks(tasks)
+    1. Buy groceries
+    2. Complete homework
+    3. Walk the dog
+"""
     print('\nYour Tasks:')
     for i, task in enumerate(tasks, 1):
         print(f'{i}. {task}')
