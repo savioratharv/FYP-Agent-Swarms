@@ -110,12 +110,16 @@ def process_node(node, project_root, dependencies):
         }
     ]
     
+    start_time = time.time()
     client = OpenAI()
     client.api_key = os.getenv("OPENAI_API_KEY")
     response = client.chat.completions.create(
         model="gpt-4.1-nano",
         messages=history
     )
+    end_time = time.time()
+    elapsed_time = end_time - start_time
+    print(f"Time taken for {node} overall documentation: {elapsed_time:.2f} seconds")
     
     history.append(response.choices[0].message)
 
@@ -135,10 +139,15 @@ def process_node(node, project_root, dependencies):
                     "role": "user",
                     "content": func_prompt
                 })
+        
+        start_time = time.time()
         response_func = client.chat.completions.create(
             model="gpt-4.1-nano",
             messages=history
         )
+        end_time = time.time()
+        elapsed_time = end_time - start_time
+        print(f"Time taken for {node} function docstring: {elapsed_time:.2f} seconds")
         history.append(response_func.choices[0].message)
         doc = f'"""{response_func.choices[0].message.content.strip()}"""'
         time.sleep(20)
@@ -196,10 +205,14 @@ def process_node(node, project_root, dependencies):
                     "role": "user",
                     "content": func_prompt
                 })
+                start_time = time.time()
                 response_func = client.chat.completions.create(
                     model="gpt-4.1-nano",
                     messages=history
                 )
+                end_time = time.time()
+                elapsed_time = end_time - start_time
+                print(f"Time taken for {node} function dependency docstring: {elapsed_time:.2f} seconds")
                 history.append(response_func.choices[0].message)
                 summary_text = response_func.choices[0].message.content.strip()
                 func_summaries_for_parent[func] = summary_text

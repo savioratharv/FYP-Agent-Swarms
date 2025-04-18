@@ -1,63 +1,55 @@
 # /********************************************************************************
 #  * Filename: storage.py
 #  * 
-#  * Description:
-#  * This module provides functionality for saving and loading tasks to and from 
-#  * a JSON file. It defines two primary functions: save_tasks and load_tasks.
-#  * The tasks are stored in a file named 'tasks.json'. The module handles 
-#  * exceptions that may arise during file operations, ensuring robustness.
+#  * File Description:
+#  * This module facilitates persistent storage of task data through JSON serialization.
+#  * It provides mechanisms to save a collection of tasks to a JSON file and to retrieve
+#  * tasks from that file. The module ensures robustness against common I/O and data
+#  * decoding errors by implementing appropriate exception handling. Following IEEE 1016 
+#  * standards and GNU coding conventions, the code emphasizes clarity, consistency, 
+#  * and readability.
 #  * 
 #  * Functions:
 #  * 
 #  * 1. save_tasks(tasks)
 #  *    Purpose:
-#  *    Saves a list of tasks to a JSON file. The tasks are expected to be in a 
-#  *    format that is compatible with JSON serialization. 
-#  *    
+#  *       Serializes a list of task objects and writes them into a JSON-formatted file named 'tasks.json'.
 #  *    Parameters:
-#  *    - tasks: A list containing task data to be saved. Each item in the list 
-#  *              should be serializable to JSON format.
-#  * 
-#  *    Returns: 
-#  *    None
-#  *    
+#  *       tasks (list): A collection of task objects, each of which must be compatible with JSON serialization.
+#  *    Returns:
+#  *       None
 #  *    Behavior:
-#  *    The function opens the designated JSON file ('tasks.json') in write mode 
-#  *    and writes the serialized task data to it. If the operation is successful, 
-#  *    the tasks are saved permanently until overwritten.
-#  * 
+#  *       Opens the designated file in write mode, serializes the input list into JSON, and writes
+#  *       the data. Overwrites existing content without explicit backup. Assumes provided data is
+#  *       properly formatted and serializable.
+#  *    Usage:
+#  *       Invoke this function with a list of task representations to update persistent storage.
 #  * 
 #  * 2. load_tasks()
 #  *    Purpose:
-#  *    Loads and returns a list of tasks from a JSON file. If the file is not 
-#  *    found or if the data within the file is not valid JSON, the function 
-#  *    returns an empty list.
-#  * 
-#  *    Parameters:
-#  *    None
-#  * 
+#  *       Reads and deserializes task data from the JSON file named 'tasks.json'.
 #  *    Returns:
-#  *    A list of tasks, which may be empty if the file does not exist or cannot 
-#  *    be decoded. 
-#  * 
+#  *       list: The list of tasks retrieved from storage. If the file is missing or contains
+#  *             invalid data, an empty list is returned.
 #  *    Behavior:
-#  *    The function attempts to open the designated JSON file ('tasks.json') in 
-#  *    read mode. If successful, it reads the data, deserializes it from JSON 
-#  *    format, and returns it as a list. If the file is not found or if a JSON 
-#  *    decoding error occurs, it safely returns an empty list.
+#  *       Attempts to open the designated file in read mode. If successful, deserializes JSON content.
+#  *       If the file does not exist or contains invalid JSON, returns an empty list to prevent crashes.
+#  *    Usage:
+#  *       Call this function at application startup or when loading task data to restore user tasks.
 #  * 
-#  *  Exception Handling:
-#  *  The load_tasks function specifically handles two exceptions:
-#  *  - FileNotFoundError: Triggered if the file 'tasks.json' does not exist; 
-#  *    an empty list is returned.
-#  *  - json.JSONDecodeError: Triggered if the content of the file is not valid 
-#  *    JSON; an empty list is returned.
+#  * Exception Handling:
+#  * - load_tasks() captures and manages FileNotFoundError to handle missing storage file gracefully.
+#  * - Also captures JSONDecodeError to handle invalid or malformed JSON content without crashing.
 #  * 
-#  * Usage:
-#  * This module can be used as part of a larger application for managing 
-#  * tasks, allowing users to persist their data across sessions. Users should 
-#  * ensure that the data passed to save_tasks is properly formatted to be 
-#  * compatible with JSON serialization to avoid runtime errors.
+#  * Implementation Details:
+#  * - Uses a constant FILE_NAME to define the JSON data file location ('tasks.json').
+#  * - Employs context managers for safe file operations, ensuring resources are properly released.
+#  * - Ensures that functions do not modify external state and operate predictably.
+#  * 
+#  * Usage Context:
+#  * This module is intended for integration within task management applications requiring
+#  * data persistence. Users should ensure that task data passed to save_tasks() conforms to
+#  * JSON serializable structures, such as dictionaries or lists of primitives.
 #  * 
 #  * Author: [Your Name]
 #  * Date: [Current Date]
