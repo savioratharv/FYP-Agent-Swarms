@@ -1,0 +1,250 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 600px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+             #loadingBar {
+                 position:absolute;
+                 top:0px;
+                 left:0px;
+                 width: 100%;
+                 height: 600px;
+                 background-color:rgba(200,200,200,0.8);
+                 -webkit-transition: all 0.5s ease;
+                 -moz-transition: all 0.5s ease;
+                 -ms-transition: all 0.5s ease;
+                 -o-transition: all 0.5s ease;
+                 transition: all 0.5s ease;
+                 opacity:1;
+             }
+
+             #bar {
+                 position:absolute;
+                 top:0px;
+                 left:0px;
+                 width:20px;
+                 height:20px;
+                 margin:auto auto auto auto;
+                 border-radius:11px;
+                 border:2px solid rgba(30,30,30,0.05);
+                 background: rgb(0, 173, 246); /* Old browsers */
+                 box-shadow: 2px 0px 4px rgba(0,0,0,0.4);
+             }
+
+             #border {
+                 position:absolute;
+                 top:10px;
+                 left:10px;
+                 width:500px;
+                 height:23px;
+                 margin:auto auto auto auto;
+                 box-shadow: 0px 0px 4px rgba(0,0,0,0.2);
+                 border-radius:10px;
+             }
+
+             #text {
+                 position:absolute;
+                 top:8px;
+                 left:530px;
+                 width:30px;
+                 height:50px;
+                 margin:auto auto auto auto;
+                 font-size:22px;
+                 color: #000000;
+             }
+
+             div.outerBorder {
+                 position:relative;
+                 top:400px;
+                 width:600px;
+                 height:44px;
+                 margin:auto auto auto auto;
+                 border:8px solid rgba(0,0,0,0.1);
+                 background: rgb(252,252,252); /* Old browsers */
+                 background: -moz-linear-gradient(top,  rgba(252,252,252,1) 0%, rgba(237,237,237,1) 100%); /* FF3.6+ */
+                 background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(252,252,252,1)), color-stop(100%,rgba(237,237,237,1))); /* Chrome,Safari4+ */
+                 background: -webkit-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Chrome10+,Safari5.1+ */
+                 background: -o-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Opera 11.10+ */
+                 background: -ms-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* IE10+ */
+                 background: linear-gradient(to bottom,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* W3C */
+                 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcfcfc', endColorstr='#ededed',GradientType=0 ); /* IE6-9 */
+                 border-radius:72px;
+                 box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
+             }
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+            <div id="loadingBar">
+              <div class="outerBorder">
+                <div id="text">0%</div>
+                <div id="border">
+                  <div id="bar"></div>
+                </div>
+              </div>
+            </div>
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#97c2fc", "id": "swirl.py", "label": "swirl.py", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "swirl_load.py", "label": "swirl_load.py", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "swirl\\consumers.py", "label": "swirl\\consumers.py", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "swirl\\expirer.py", "label": "swirl\\expirer.py", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "swirl\\forms.py", "label": "swirl\\forms.py", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "swirl\\middleware.py", "label": "swirl\\middleware.py", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "swirl\\search.py", "label": "swirl\\search.py", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "swirl\\serializers.py", "label": "swirl\\serializers.py", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "swirl\\subscriber.py", "label": "swirl\\subscriber.py", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "swirl\\tasks.py", "label": "swirl\\tasks.py", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "swirl\\urls.py", "label": "swirl\\urls.py", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "swirl\\utils.py", "label": "swirl\\utils.py", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "swirl\\views.py", "label": "swirl\\views.py", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "swirl\\web_page.py", "label": "swirl\\web_page.py", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "swirl\\authenticators\\microsoft.py", "label": "swirl\\authenticators\\microsoft.py", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "swirl\\authenticators\\__init__.py", "label": "swirl\\authenticators\\__init__.py", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "swirl\\connectors\\bigquery.py", "label": "swirl\\connectors\\bigquery.py", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "swirl\\connectors\\connector.py", "label": "swirl\\connectors\\connector.py", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "swirl\\connectors\\db_connector.py", "label": "swirl\\connectors\\db_connector.py", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "swirl\\connectors\\elastic.py", "label": "swirl\\connectors\\elastic.py", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "swirl\\connectors\\gen_ai.py", "label": "swirl\\connectors\\gen_ai.py", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "swirl\\connectors\\mappings.py", "label": "swirl\\connectors\\mappings.py", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "swirl\\connectors\\microsoft_graph.py", "label": "swirl\\connectors\\microsoft_graph.py", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "swirl\\connectors\\mongodb.py", "label": "swirl\\connectors\\mongodb.py", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "swirl\\connectors\\opensearch.py", "label": "swirl\\connectors\\opensearch.py", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "swirl\\connectors\\oracle.py", "label": "swirl\\connectors\\oracle.py", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "swirl\\connectors\\pinecone.py", "label": "swirl\\connectors\\pinecone.py", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "swirl\\connectors\\postgresql.py", "label": "swirl\\connectors\\postgresql.py", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "swirl\\connectors\\qdrant.py", "label": "swirl\\connectors\\qdrant.py", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "swirl\\connectors\\requests.py", "label": "swirl\\connectors\\requests.py", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "swirl\\connectors\\requestsget.py", "label": "swirl\\connectors\\requestsget.py", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "swirl\\connectors\\requestspost.py", "label": "swirl\\connectors\\requestspost.py", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "swirl\\connectors\\snowflake.py", "label": "swirl\\connectors\\snowflake.py", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "swirl\\connectors\\sqlite3.py", "label": "swirl\\connectors\\sqlite3.py", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "swirl\\connectors\\utils.py", "label": "swirl\\connectors\\utils.py", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "swirl\\connectors\\vdb_connector.py", "label": "swirl\\connectors\\vdb_connector.py", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "swirl\\connectors\\verify_ssl_common.py", "label": "swirl\\connectors\\verify_ssl_common.py", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "swirl\\connectors\\__init__.py", "label": "swirl\\connectors\\__init__.py", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "swirl\\migrations\\0001_initial.py", "label": "swirl\\migrations\\0001_initial.py", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "swirl\\mixers\\date.py", "label": "swirl\\mixers\\date.py", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "swirl\\mixers\\mixer.py", "label": "swirl\\mixers\\mixer.py", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "swirl\\mixers\\relevancy.py", "label": "swirl\\mixers\\relevancy.py", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "swirl\\mixers\\stack.py", "label": "swirl\\mixers\\stack.py", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "swirl\\mixers\\utils.py", "label": "swirl\\mixers\\utils.py", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "swirl\\mixers\\__init__.py", "label": "swirl\\mixers\\__init__.py", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "swirl\\processors\\adaptive.py", "label": "swirl\\processors\\adaptive.py", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "swirl\\processors\\date_finder.py", "label": "swirl\\processors\\date_finder.py", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "swirl\\processors\\dedupe.py", "label": "swirl\\processors\\dedupe.py", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "swirl\\processors\\generic.py", "label": "swirl\\processors\\generic.py", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "swirl\\processors\\gen_ai_query.py", "label": "swirl\\processors\\gen_ai_query.py", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "swirl\\processors\\mapping.py", "label": "swirl\\processors\\mapping.py", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "swirl\\processors\\processor.py", "label": "swirl\\processors\\processor.py", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "swirl\\processors\\rag.py", "label": "swirl\\processors\\rag.py", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "swirl\\processors\\relevancy.py", "label": "swirl\\processors\\relevancy.py", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "swirl\\processors\\remove_pii.py", "label": "swirl\\processors\\remove_pii.py", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "swirl\\processors\\transform_query_processor.py", "label": "swirl\\processors\\transform_query_processor.py", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "swirl\\processors\\transform_query_processor_utils.py", "label": "swirl\\processors\\transform_query_processor_utils.py", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "swirl\\processors\\utils.py", "label": "swirl\\processors\\utils.py", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "swirl\\processors\\__init__.py", "label": "swirl\\processors\\__init__.py", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "swirl\\templatetags\\env_extras.py", "label": "swirl\\templatetags\\env_extras.py", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "swirl\\tests\\microsoft_tests.py", "label": "swirl\\tests\\microsoft_tests.py", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "swirl\\tests\\tests.py", "label": "swirl\\tests\\tests.py", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "swirl\\tests\\test_general_request.py", "label": "swirl\\tests\\test_general_request.py", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "swirl\\tests\\test_query_processing.py", "label": "swirl\\tests\\test_query_processing.py", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "swirl\\tests\\test_query_transform.py", "label": "swirl\\tests\\test_query_transform.py", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "swirl\\tests\\test_sp_request_post.py", "label": "swirl\\tests\\test_sp_request_post.py", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "swirl\\tests\\test_web_page.py", "label": "swirl\\tests\\test_web_page.py", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "swirl_server\\routing.py", "label": "swirl_server\\routing.py", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "swirl\\bs4.py", "label": "swirl\\bs4.py", "shape": "dot", "size": 10}, {"color": "orange", "id": "swirl\\models.py", "label": "swirl\\models.py", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "swirl\\admin.py", "label": "swirl\\admin.py", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "swirl\\spacy.py", "label": "swirl\\spacy.py", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "swirl\\embeddings.py", "label": "swirl\\embeddings.py", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "swirl_server\\celery.py", "label": "swirl_server\\celery.py", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "swirl\\rag_prompt.py", "label": "swirl\\rag_prompt.py", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "swirl\\processors\\spellcheck_query.py", "label": "swirl\\processors\\spellcheck_query.py", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "swirl_server\\settings.py", "label": "swirl_server\\settings.py", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "swirl_server\\__init__.py", "label": "swirl_server\\__init__.py", "shape": "dot", "size": 10}, {"color": "green", "id": "manage.py", "label": "manage.py", "shape": "dot", "size": 10}, {"color": "green", "id": ".github\\scripts\\generate_broken_links_summary.py", "label": ".github\\scripts\\generate_broken_links_summary.py", "shape": "dot", "size": 10}, {"color": "green", "id": "DevUtils\\fix_csv.py", "label": "DevUtils\\fix_csv.py", "shape": "dot", "size": 10}, {"color": "green", "id": "DevUtils\\index_email_elastic.py", "label": "DevUtils\\index_email_elastic.py", "shape": "dot", "size": 10}, {"color": "green", "id": "DevUtils\\index_email_opensearch.py", "label": "DevUtils\\index_email_opensearch.py", "shape": "dot", "size": 10}, {"color": "green", "id": "DevUtils\\verify_search.py", "label": "DevUtils\\verify_search.py", "shape": "dot", "size": 10}, {"color": "green", "id": "swirl\\apps.py", "label": "swirl\\apps.py", "shape": "dot", "size": 10}, {"color": "green", "id": "swirl\\banner.py", "label": "swirl\\banner.py", "shape": "dot", "size": 10}, {"color": "orange", "id": "swirl\\data_profiler.py", "label": "swirl\\data_profiler.py", "shape": "dot", "size": 10}, {"color": "green", "id": "swirl\\nltk.py", "label": "swirl\\nltk.py", "shape": "dot", "size": 10}, {"color": "orange", "id": "swirl\\performance_logger.py", "label": "swirl\\performance_logger.py", "shape": "dot", "size": 10}, {"color": "green", "id": "swirl\\services.py", "label": "swirl\\services.py", "shape": "dot", "size": 10}, {"color": "green", "id": "swirl\\swirl_common.py", "label": "swirl\\swirl_common.py", "shape": "dot", "size": 10}, {"color": "green", "id": "swirl\\__init__.py", "label": "swirl\\__init__.py", "shape": "dot", "size": 10}, {"color": "orange", "id": "swirl\\authenticators\\authenticator.py", "label": "swirl\\authenticators\\authenticator.py", "shape": "dot", "size": 10}, {"color": "green", "id": "swirl\\migrations\\0002_alter_result_query_string_to_provider_and_more.py", "label": "swirl\\migrations\\0002_alter_result_query_string_to_provider_and_more.py", "shape": "dot", "size": 10}, {"color": "green", "id": "swirl\\migrations\\__init__.py", "label": "swirl\\migrations\\__init__.py", "shape": "dot", "size": 10}, {"color": "green", "id": "swirl\\openai\\openai.py", "label": "swirl\\openai\\openai.py", "shape": "dot", "size": 10}, {"color": "green", "id": "swirl\\processors\\result_map_converter.py", "label": "swirl\\processors\\result_map_converter.py", "shape": "dot", "size": 10}, {"color": "green", "id": "swirl\\templatetags\\__init__.py", "label": "swirl\\templatetags\\__init__.py", "shape": "dot", "size": 10}, {"color": "green", "id": "swirl_server\\asgi.py", "label": "swirl_server\\asgi.py", "shape": "dot", "size": 10}, {"color": "green", "id": "swirl_server\\log_config.py", "label": "swirl_server\\log_config.py", "shape": "dot", "size": 10}, {"color": "green", "id": "swirl_server\\urls.py", "label": "swirl_server\\urls.py", "shape": "dot", "size": 10}, {"color": "green", "id": "swirl_server\\wsgi.py", "label": "swirl_server\\wsgi.py", "shape": "dot", "size": 10}]);
+                  edges = new vis.DataSet([{"arrows": "to", "from": "swirl.py", "imported_functions": ["SWIRL_VERSION", "bcolors", "SWIRL_BANNER", "SERVICES_DICT", "SWIRL_SERVICES_DEBUG_DICT", "is_running_celery_redis", "SWIRL_SERVICES_DEBUG", "SERVICES", "get_page_fetcher_or_none"], "to": "swirl.py", "width": 1}, {"arrows": "to", "from": "swirl.py", "imported_functions": ["bcolors", "SWIRL_BANNER"], "to": "swirl_load.py", "width": 1}, {"arrows": "to", "from": "swirl.py", "imported_functions": ["Result", "*", "Search"], "to": "swirl\\consumers.py", "width": 1}, {"arrows": "to", "from": "swirl.py", "imported_functions": ["swirl_setdir", "Search"], "to": "swirl\\expirer.py", "width": 1}, {"arrows": "to", "from": "swirl.py", "imported_functions": ["QueryTransform", "swirl_setdir"], "to": "swirl\\forms.py", "width": 1}, {"arrows": "to", "from": "swirl.py", "imported_functions": ["*", "Search"], "to": "swirl\\middleware.py", "width": 1}, {"arrows": "to", "from": "swirl.py", "imported_functions": ["SwirlQueryRequestLogger", "Result", "federate_task", "*", "get_pre_query_processor_or_transform", "Search", "get_url_details", "select_providers", "SearchProvider"], "to": "swirl\\search.py", "width": 1}, {"arrows": "to", "from": "swirl.py", "imported_functions": ["QueryTransform", "Result", "SearchProvider", "Search"], "to": "swirl\\serializers.py", "width": 1}, {"arrows": "to", "from": "swirl.py", "imported_functions": ["*", "swirl_setdir", "search", "Search", "get_query_selectd_provder_list", "OauthToken"], "to": "swirl\\subscriber.py", "width": 1}, {"arrows": "to", "from": "swirl.py", "imported_functions": ["remove_tags", "OauthToken", "subscriber", "expirer", "*", "swirl_setdir", "search", "SWIRL_AUTHENTICATORS_DISPATCH", "PageFetcherFactory", "SearchProvider"], "to": "swirl\\tasks.py", "width": 1}, {"arrows": "to", "from": "swirl.py", "imported_functions": ["Microsoft"], "to": "swirl\\urls.py", "width": 1}, {"arrows": "to", "from": "swirl.py", "imported_functions": ["PageFetcherFactory", "SearchViewSet"], "to": "swirl\\utils.py", "width": 1}, {"arrows": "to", "from": "swirl.py", "imported_functions": ["update_microsoft_token_task", "SWIRL_VERSION", "Result", "QueryTransformNoCredentialsSerializer", "QueryTransformSerializer", "AuthResponseSerializer", "search", "UserSerializer", "Search", "paginate", "LoginRequestSerializer", "SearchProviderSerializer", "SearchSerializer", "OauthToken", "StatusResponseSerializer", "QueryTransform", "SearchProvider", "*", "GroupSerializer", "Authenticator", "ResultSerializer"], "to": "swirl\\views.py", "width": 1}, {"arrows": "to", "from": "swirl.py", "imported_functions": ["clean_string_keep_punct"], "to": "swirl\\web_page.py", "width": 1}, {"arrows": "to", "from": "swirl.py", "imported_functions": ["OauthToken", "Authenticator"], "to": "swirl\\authenticators\\microsoft.py", "width": 1}, {"arrows": "to", "from": "swirl.py", "imported_functions": ["Authenticator", "Microsoft"], "to": "swirl\\authenticators\\__init__.py", "width": 1}, {"arrows": "to", "from": "swirl.py", "imported_functions": ["DBConnector", "swirl_setdir"], "to": "swirl\\connectors\\bigquery.py", "width": 1}, {"arrows": "to", "from": "swirl.py", "imported_functions": ["*", "get_query_processor_or_transform", "swirl_setdir", "Search", "Result", "result_processor_feedback_merge_records", "SearchProvider", "get_mappings_dict"], "to": "swirl\\connectors\\connector.py", "width": 1}, {"arrows": "to", "from": "swirl.py", "imported_functions": ["bind_query_mappings", "Connector", "swirl_setdir"], "to": "swirl\\connectors\\db_connector.py", "width": 1}, {"arrows": "to", "from": "swirl.py", "imported_functions": ["bind_query_mappings", "VerifyCertsCommon", "swirl_setdir"], "to": "swirl\\connectors\\elastic.py", "width": 1}, {"arrows": "to", "from": "swirl.py", "imported_functions": ["AI_QUERY_USE", "Connector", "OpenAIClient", "swirl_setdir"], "to": "swirl\\connectors\\gen_ai.py", "width": 1}, {"arrows": "to", "from": "swirl.py", "imported_functions": ["RESULT_MAPPING_COMMANDS", "swirl_setdir"], "to": "swirl\\connectors\\mappings.py", "width": 1}, {"arrows": "to", "from": "swirl.py", "imported_functions": ["RequestsGet", "get_search_obj", "swirl_setdir", "RequestsPost", "Microsoft", "get_mappings_dict"], "to": "swirl\\connectors\\microsoft_graph.py", "width": 1}, {"arrows": "to", "from": "swirl.py", "imported_functions": ["bind_query_mappings", "Connector", "swirl_setdir", "get_tag"], "to": "swirl\\connectors\\mongodb.py", "width": 1}, {"arrows": "to", "from": "swirl.py", "imported_functions": ["bind_query_mappings", "VerifyCertsCommon", "swirl_setdir"], "to": "swirl\\connectors\\opensearch.py", "width": 1}, {"arrows": "to", "from": "swirl.py", "imported_functions": ["bind_query_mappings", "DBConnector", "swirl_setdir"], "to": "swirl\\connectors\\oracle.py", "width": 1}, {"arrows": "to", "from": "swirl.py", "imported_functions": ["VectorDBConnector", "swirl_setdir"], "to": "swirl\\connectors\\pinecone.py", "width": 1}, {"arrows": "to", "from": "swirl.py", "imported_functions": ["DBConnector", "swirl_setdir"], "to": "swirl\\connectors\\postgresql.py", "width": 1}, {"arrows": "to", "from": "swirl.py", "imported_functions": ["VectorDBConnector", "swirl_setdir"], "to": "swirl\\connectors\\qdrant.py", "width": 1}, {"arrows": "to", "from": "swirl.py", "imported_functions": ["VerifyCertsCommon", "Connector", "RESPONSE_MAPPING_KEYS", "swirl_setdir", "bind_query_mappings", "http_auth_parse"], "to": "swirl\\connectors\\requests.py", "width": 1}, {"arrows": "to", "from": "swirl.py", "imported_functions": ["bind_query_mappings", "swirl_setdir", "Requests"], "to": "swirl\\connectors\\requestsget.py", "width": 1}, {"arrows": "to", "from": "swirl.py", "imported_functions": ["bind_query_mappings", "swirl_setdir", "Requests"], "to": "swirl\\connectors\\requestspost.py", "width": 1}, {"arrows": "to", "from": "swirl.py", "imported_functions": ["bind_query_mappings", "DBConnector", "swirl_setdir"], "to": "swirl\\connectors\\snowflake.py", "width": 1}, {"arrows": "to", "from": "swirl.py", "imported_functions": ["DBConnector", "swirl_setdir"], "to": "swirl\\connectors\\sqlite3.py", "width": 1}, {"arrows": "to", "from": "swirl.py", "imported_functions": ["QUERY_MAPPING_VARIABLES", "Result", "swirl_setdir", "Search"], "to": "swirl\\connectors\\utils.py", "width": 1}, {"arrows": "to", "from": "swirl.py", "imported_functions": ["Connector", "swirl_setdir", "get_tag"], "to": "swirl\\connectors\\vdb_connector.py", "width": 1}, {"arrows": "to", "from": "swirl.py", "imported_functions": ["Connector"], "to": "swirl\\connectors\\verify_ssl_common.py", "width": 1}, {"arrows": "to", "from": "swirl.py", "imported_functions": ["RequestsGet", "MongoDB", "M365OneDrive", "RequestsPost", "GenAI", "Sqlite3", "BigQuery", "M365SharePointSites", "M365OutlookMessages", "MicrosoftTeams", "Oracle", "PineconeDB", "QdrantDB", "Elastic", "OpenSearch", "M365OutlookCalendar", "Snowflake"], "to": "swirl\\connectors\\__init__.py", "width": 1}, {"arrows": "to", "from": "swirl.py", "imported_functions": [], "to": "swirl\\migrations\\0001_initial.py", "width": 1}, {"arrows": "to", "from": "swirl.py", "imported_functions": ["*", "swirl_setdir", "Mixer"], "to": "swirl\\mixers\\date.py", "width": 1}, {"arrows": "to", "from": "swirl.py", "imported_functions": ["swirl_setdir", "Search", "get_url_details", "Result", "SWIRL_BANNER_TEXT"], "to": "swirl\\mixers\\mixer.py", "width": 1}, {"arrows": "to", "from": "swirl.py", "imported_functions": ["*", "swirl_setdir", "Mixer"], "to": "swirl\\mixers\\relevancy.py", "width": 1}, {"arrows": "to", "from": "swirl.py", "imported_functions": ["*", "swirl_setdir", "Mixer"], "to": "swirl\\mixers\\stack.py", "width": 1}, {"arrows": "to", "from": "swirl.py", "imported_functions": ["swirl_setdir"], "to": "swirl\\mixers\\utils.py", "width": 1}, {"arrows": "to", "from": "swirl.py", "imported_functions": ["*"], "to": "swirl\\mixers\\__init__.py", "width": 1}, {"arrows": "to", "from": "swirl.py", "imported_functions": ["*", "clean_string", "get_mappings_dict"], "to": "swirl\\processors\\adaptive.py", "width": 1}, {"arrows": "to", "from": "swirl.py", "imported_functions": ["*"], "to": "swirl\\processors\\date_finder.py", "width": 1}, {"arrows": "to", "from": "swirl.py", "imported_functions": ["*", "nlp"], "to": "swirl\\processors\\dedupe.py", "width": 1}, {"arrows": "to", "from": "swirl.py", "imported_functions": ["*", "clean_string", "match_all", "remove_tags", "create_result_dictionary", "get_tag", "get_mappings_dict"], "to": "swirl\\processors\\generic.py", "width": 1}, {"arrows": "to", "from": "swirl.py", "imported_functions": ["AI_REWRITE_USE", "*", "OpenAIClient", "get_tag"], "to": "swirl\\processors\\gen_ai_query.py", "width": 1}, {"arrows": "to", "from": "swirl.py", "imported_functions": ["find_closest_median_most_populated_field", "ResultMapConverter", "find_longest_most_populated_field", "ResultProcessor", "result_processor_feedback_provider_query_terms", "RESULT_MAPPING_COMMANDS", "profile_data", "filter_elements_case_insensitive", "extract_text_from_tags", "date_str_to_timestamp", "list_by_population_desc", "create_result_dictionary", "str_safe_format", "get_tag"], "to": "swirl\\processors\\mapping.py", "width": 1}, {"arrows": "to", "from": "swirl.py", "imported_functions": ["Result", "swirl_setdir", "Search"], "to": "swirl\\processors\\processor.py", "width": 1}, {"arrows": "to", "from": "swirl.py", "imported_functions": ["page_fetcher_task", "AI_RAG_USE", "OpenAIClient", "remove_tags", "*", "create_result_dictionary", "clean_string_keep_punct", "RagPrompt", "bs"], "to": "swirl\\processors\\rag.py", "width": 1}, {"arrows": "to", "from": "swirl.py", "imported_functions": ["clean_string", "PostResultProcessor", "SwirlRelevancyLogger", "result_processor_feedback_merge_records", "sent_tokenize", "json_to_flat_string", "result_processor_feedback_empty_record", "parse_query", "match_any", "capitalize_search", "match_all", "remove_tags", "ResultProcessor", "highlight_list", "has_numeric", "position_dict", "capitalize", "stem_string", "remove_numeric", "nlp"], "to": "swirl\\processors\\relevancy.py", "width": 1}, {"arrows": "to", "from": "swirl.py", "imported_functions": ["QueryProcessor", "remove_tags", "ResultProcessor", "PostResultProcessor", "highlight_list"], "to": "swirl\\processors\\remove_pii.py", "width": 1}, {"arrows": "to", "from": "swirl.py", "imported_functions": ["word_tokenize", "clean_string", "str_tok_get_prefixes", "QueryProcessor"], "to": "swirl\\processors\\transform_query_processor.py", "width": 1}, {"arrows": "to", "from": "swirl.py", "imported_functions": ["QueryTransform", "alloc_processor", "TransformQueryProcessorFactory"], "to": "swirl\\processors\\transform_query_processor_utils.py", "width": 1}, {"arrows": "to", "from": "swirl.py", "imported_functions": ["word_tokenize", "stopwords", "is_punctuation", "bs", "MarkupResemblesLocatorWarning"], "to": "swirl\\processors\\utils.py", "width": 1}, {"arrows": "to", "from": "swirl.py", "imported_functions": ["*", "SearchProvider", "Search"], "to": "swirl\\processors\\__init__.py", "width": 1}, {"arrows": "to", "from": "swirl.py", "imported_functions": ["SWIRL_VERSION"], "to": "swirl\\templatetags\\env_extras.py", "width": 1}, {"arrows": "to", "from": "swirl.py", "imported_functions": ["Result", "MicrosoftTeams", "SearchProviderSerializer", "M365OutlookMessages", "ResultSerializer", "search", "Search", "Authenticator", "Microsoft"], "to": "swirl\\tests\\microsoft_tests.py", "width": 1}, {"arrows": "to", "from": "swirl.py", "imported_functions": ["match_all", "str_tok_get_prefixes", "ResultMapConverter", "DropIrrelevantPostResultProcessor", "highlight_list", "http_auth_parse", "SearchProvider", "date_str_to_timestamp", "*", "tokenize_word_list", "DedupeByFieldResultProcessor", "select_providers", "SearchProviderSerializer"], "to": "swirl\\tests\\tests.py", "width": 1}, {"arrows": "to", "from": "swirl.py", "imported_functions": ["Result", "MicrosoftTeams", "SearchProviderSerializer", "M365OutlookMessages", "ResultSerializer", "search", "Search", "Authenticator", "Microsoft"], "to": "swirl\\tests\\test_general_request.py", "width": 1}, {"arrows": "to", "from": "swirl.py", "imported_functions": ["SearchProviderSerializer"], "to": "swirl\\tests\\test_query_processing.py", "width": 1}, {"arrows": "to", "from": "swirl.py", "imported_functions": ["SynonymQueryProcessor", "TransformQueryProcessorFactory", "SearchProviderSerializer"], "to": "swirl\\tests\\test_query_transform.py", "width": 1}, {"arrows": "to", "from": "swirl.py", "imported_functions": ["SynonymQueryProcessor", "TransformQueryProcessorFactory", "SearchProviderSerializer"], "to": "swirl\\tests\\test_sp_request_post.py", "width": 1}, {"arrows": "to", "from": "swirl.py", "imported_functions": ["DocumentWebPage", "PageFetcherFactory", "PageFetcher", "PageFetcherOptions"], "to": "swirl\\tests\\test_web_page.py", "width": 1}, {"arrows": "to", "from": "swirl.py", "imported_functions": ["Consumer", "WebSocketTokenMiddleware"], "to": "swirl_server\\routing.py", "width": 1}, {"arrows": "to", "from": "swirl\\bs4.py", "imported_functions": ["BeautifulSoup", "MarkupResemblesLocatorWarning"], "to": "swirl\\bs4.py", "width": 1}, {"arrows": "to", "from": "swirl\\bs4.py", "imported_functions": ["BeautifulSoup"], "to": "swirl\\web_page.py", "width": 1}, {"arrows": "to", "from": "swirl\\forms.py", "imported_functions": ["QueryTransformForm"], "to": "swirl\\views.py", "width": 1}, {"arrows": "to", "from": "swirl\\models.py", "imported_functions": ["Result", "OauthToken", "QueryTransform", "Search", "SearchProvider"], "to": "swirl\\admin.py", "width": 1}, {"arrows": "to", "from": "swirl\\spacy.py", "imported_functions": [], "to": "swirl\\spacy.py", "width": 1}, {"arrows": "to", "from": "swirl\\connectors\\pinecone.py", "imported_functions": ["Pinecone"], "to": "swirl\\embeddings.py", "width": 1}, {"arrows": "to", "from": "swirl\\connectors\\pinecone.py", "imported_functions": ["Pinecone"], "to": "swirl\\connectors\\pinecone.py", "width": 1}, {"arrows": "to", "from": "swirl\\connectors\\snowflake.py", "imported_functions": ["ProgrammingError"], "to": "swirl\\connectors\\snowflake.py", "width": 1}, {"arrows": "to", "from": "swirl\\connectors\\sqlite3.py", "imported_functions": [], "to": "swirl\\utils.py", "width": 1}, {"arrows": "to", "from": "swirl\\connectors\\sqlite3.py", "imported_functions": ["Error"], "to": "swirl\\connectors\\sqlite3.py", "width": 1}, {"arrows": "to", "from": "swirl\\connectors\\sqlite3.py", "imported_functions": ["IntegrityError"], "to": "swirl\\tests\\test_query_transform.py", "width": 1}, {"arrows": "to", "from": "swirl_server\\celery.py", "imported_functions": ["get_task_logger"], "to": "swirl\\rag_prompt.py", "width": 1}, {"arrows": "to", "from": "swirl_server\\celery.py", "imported_functions": ["current_task", "group", "TimeoutError", "get_task_logger", "allow_join_result"], "to": "swirl\\search.py", "width": 1}, {"arrows": "to", "from": "swirl_server\\celery.py", "imported_functions": ["crontab", "shared_task", "get_task_logger"], "to": "swirl\\tasks.py", "width": 1}, {"arrows": "to", "from": "swirl_server\\celery.py", "imported_functions": ["get_task_logger"], "to": "swirl\\web_page.py", "width": 1}, {"arrows": "to", "from": "swirl_server\\celery.py", "imported_functions": ["get_task_logger"], "to": "swirl\\authenticators\\microsoft.py", "width": 1}, {"arrows": "to", "from": "swirl_server\\celery.py", "imported_functions": ["get_task_logger"], "to": "swirl\\connectors\\bigquery.py", "width": 1}, {"arrows": "to", "from": "swirl_server\\celery.py", "imported_functions": ["get_task_logger"], "to": "swirl\\connectors\\connector.py", "width": 1}, {"arrows": "to", "from": "swirl_server\\celery.py", "imported_functions": ["get_task_logger"], "to": "swirl\\connectors\\db_connector.py", "width": 1}, {"arrows": "to", "from": "swirl_server\\celery.py", "imported_functions": ["get_task_logger"], "to": "swirl\\connectors\\elastic.py", "width": 1}, {"arrows": "to", "from": "swirl_server\\celery.py", "imported_functions": ["get_task_logger"], "to": "swirl\\connectors\\gen_ai.py", "width": 1}, {"arrows": "to", "from": "swirl_server\\celery.py", "imported_functions": ["get_task_logger"], "to": "swirl\\connectors\\microsoft_graph.py", "width": 1}, {"arrows": "to", "from": "swirl_server\\celery.py", "imported_functions": ["get_task_logger"], "to": "swirl\\connectors\\mongodb.py", "width": 1}, {"arrows": "to", "from": "swirl_server\\celery.py", "imported_functions": ["get_task_logger"], "to": "swirl\\connectors\\opensearch.py", "width": 1}, {"arrows": "to", "from": "swirl_server\\celery.py", "imported_functions": ["get_task_logger"], "to": "swirl\\connectors\\oracle.py", "width": 1}, {"arrows": "to", "from": "swirl_server\\celery.py", "imported_functions": ["get_task_logger"], "to": "swirl\\connectors\\pinecone.py", "width": 1}, {"arrows": "to", "from": "swirl_server\\celery.py", "imported_functions": ["get_task_logger"], "to": "swirl\\connectors\\postgresql.py", "width": 1}, {"arrows": "to", "from": "swirl_server\\celery.py", "imported_functions": ["get_task_logger"], "to": "swirl\\connectors\\qdrant.py", "width": 1}, {"arrows": "to", "from": "swirl_server\\celery.py", "imported_functions": ["get_task_logger"], "to": "swirl\\connectors\\requests.py", "width": 1}, {"arrows": "to", "from": "swirl_server\\celery.py", "imported_functions": ["get_task_logger"], "to": "swirl\\connectors\\requestsget.py", "width": 1}, {"arrows": "to", "from": "swirl_server\\celery.py", "imported_functions": ["get_task_logger"], "to": "swirl\\connectors\\requestspost.py", "width": 1}, {"arrows": "to", "from": "swirl_server\\celery.py", "imported_functions": ["get_task_logger"], "to": "swirl\\connectors\\snowflake.py", "width": 1}, {"arrows": "to", "from": "swirl_server\\celery.py", "imported_functions": ["get_task_logger"], "to": "swirl\\connectors\\sqlite3.py", "width": 1}, {"arrows": "to", "from": "swirl_server\\celery.py", "imported_functions": ["get_task_logger"], "to": "swirl\\connectors\\utils.py", "width": 1}, {"arrows": "to", "from": "swirl_server\\celery.py", "imported_functions": ["get_task_logger"], "to": "swirl\\connectors\\vdb_connector.py", "width": 1}, {"arrows": "to", "from": "swirl_server\\celery.py", "imported_functions": ["get_task_logger"], "to": "swirl\\connectors\\verify_ssl_common.py", "width": 1}, {"arrows": "to", "from": "swirl_server\\celery.py", "imported_functions": ["get_task_logger"], "to": "swirl\\processors\\adaptive.py", "width": 1}, {"arrows": "to", "from": "swirl_server\\celery.py", "imported_functions": ["get_task_logger"], "to": "swirl\\processors\\date_finder.py", "width": 1}, {"arrows": "to", "from": "swirl_server\\celery.py", "imported_functions": ["get_task_logger"], "to": "swirl\\processors\\dedupe.py", "width": 1}, {"arrows": "to", "from": "swirl_server\\celery.py", "imported_functions": ["get_task_logger"], "to": "swirl\\processors\\generic.py", "width": 1}, {"arrows": "to", "from": "swirl_server\\celery.py", "imported_functions": ["get_task_logger"], "to": "swirl\\processors\\gen_ai_query.py", "width": 1}, {"arrows": "to", "from": "swirl_server\\celery.py", "imported_functions": ["get_task_logger"], "to": "swirl\\processors\\mapping.py", "width": 1}, {"arrows": "to", "from": "swirl_server\\celery.py", "imported_functions": ["get_task_logger"], "to": "swirl\\processors\\processor.py", "width": 1}, {"arrows": "to", "from": "swirl_server\\celery.py", "imported_functions": ["group", "get_task_logger"], "to": "swirl\\processors\\rag.py", "width": 1}, {"arrows": "to", "from": "swirl_server\\celery.py", "imported_functions": ["get_task_logger"], "to": "swirl\\processors\\relevancy.py", "width": 1}, {"arrows": "to", "from": "swirl_server\\celery.py", "imported_functions": ["get_task_logger"], "to": "swirl\\processors\\remove_pii.py", "width": 1}, {"arrows": "to", "from": "swirl_server\\celery.py", "imported_functions": ["get_task_logger"], "to": "swirl\\processors\\spellcheck_query.py", "width": 1}, {"arrows": "to", "from": "swirl_server\\celery.py", "imported_functions": ["get_task_logger"], "to": "swirl\\processors\\transform_query_processor.py", "width": 1}, {"arrows": "to", "from": "swirl_server\\celery.py", "imported_functions": ["get_task_logger"], "to": "swirl\\processors\\transform_query_processor_utils.py", "width": 1}, {"arrows": "to", "from": "swirl_server\\celery.py", "imported_functions": ["after_setup_logger", "Celery", "crontab"], "to": "swirl_server\\celery.py", "width": 1}, {"arrows": "to", "from": "swirl_server\\celery.py", "imported_functions": ["crontab"], "to": "swirl_server\\settings.py", "width": 1}, {"arrows": "to", "from": "swirl_server\\celery.py", "imported_functions": ["app"], "to": "swirl_server\\__init__.py", "width": 1}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+                      network.on("stabilizationProgress", function(params) {
+                          document.getElementById('loadingBar').removeAttribute("style");
+                          var maxWidth = 496;
+                          var minWidth = 20;
+                          var widthFactor = params.iterations/params.total;
+                          var width = Math.max(minWidth,maxWidth * widthFactor);
+                          document.getElementById('bar').style.width = width + 'px';
+                          document.getElementById('text').innerHTML = Math.round(widthFactor*100) + '%';
+                      });
+                      network.once("stabilizationIterationsDone", function() {
+                          document.getElementById('text').innerHTML = '100%';
+                          document.getElementById('bar').style.width = '496px';
+                          document.getElementById('loadingBar').style.opacity = 0;
+                          // really clean the dom element
+                          setTimeout(function () {document.getElementById('loadingBar').style.display = 'none';}, 500);
+                      });
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>

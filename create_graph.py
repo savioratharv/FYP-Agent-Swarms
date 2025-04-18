@@ -61,6 +61,10 @@ def build_dependency_graph(root_dir):
 
     dep_graph = nx.DiGraph()
 
+    # Ensure all files are added as nodes, even if they have no edges
+    for file in project_files:
+        dep_graph.add_node(file)
+
     for file in project_files:
         file_path = os.path.join(root_dir, file)
         imports_dict = extract_imports(file_path)
@@ -69,8 +73,8 @@ def build_dependency_graph(root_dir):
                 continue  # Ignore these imports
 
             parent_file = is_internal_import(imp, project_files_set)
-            if parent_file:
-                # Add an edge from the parent to the current file
+            # Eliminate self-loop edges
+            if parent_file and parent_file != file:
                 dep_graph.add_edge(parent_file, file, imported_functions=funcs)
     return dep_graph
 

@@ -113,7 +113,7 @@ def process_node(node, project_root, dependencies):
     client = OpenAI()
     client.api_key = os.getenv("OPENAI_API_KEY")
     response = client.chat.completions.create(
-        model="gpt-4o-mini",
+        model="gpt-4.1-nano",
         messages=history
     )
     
@@ -136,7 +136,7 @@ def process_node(node, project_root, dependencies):
                     "content": func_prompt
                 })
         response_func = client.chat.completions.create(
-            model="gpt-4o-mini",
+            model="gpt-4.1-nano",
             messages=history
         )
         history.append(response_func.choices[0].message)
@@ -197,7 +197,7 @@ def process_node(node, project_root, dependencies):
                     "content": func_prompt
                 })
                 response_func = client.chat.completions.create(
-                    model="gpt-4o-mini",
+                    model="gpt-4.1-nano",
                     messages=history
                 )
                 history.append(response_func.choices[0].message)
