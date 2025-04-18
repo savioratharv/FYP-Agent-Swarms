@@ -1,71 +1,89 @@
+# /******************************************************************************/
+# /*                                                                            */
+# /*                                main.py                                     */
+# /*                                                                            */
+# /*  File Description:                                                         */
+# /*  This script implements the main entry point for the TODO application. It  */
+# /*  provides a command-line interface allowing users to manage a list of tasks.*/
+# /*  Through a menu-driven system, users can add new tasks, remove existing   */
+# /*  tasks, list all current tasks, or exit the application.                   */
+# /*                                                                            */
+# /*  Dependencies:                                                             */
+# /*    - task_manager.TaskManager: A class responsible for handling task data.  */
+# /*                                                                            */
+# /*  Functions:                                                                */
+# /*    - main(): Orchestrates the user interface loop, processes user input,   */
+# /*      and interacts with the TaskManager instance to perform task management*/
+# /*      operations.                                                           */
+# /*                                                                            */
+# /******************************************************************************/
+# 
 # """
-# main.py
+# This script provides the main interface for the TODO application.
 # 
-# TODO Application:
-#     This module implements a command-line interface (CLI) for a simple To-Do application, allowing users to manage tasks through a console-based system. The application supports functionalities for adding, removing, and listing tasks as part of its task management capabilities.
+# Module Description:
+# -------------------
+# The script initializes an instance of the TaskManager class, which manages the
+# list of tasks. It then enters an infinite loop presenting a menu-driven user
+# interface allowing users to perform various operations:
 # 
-#     The primary function of this module is to create and manage an instance of the TaskManager class, which is responsible for executing task-related operations. The program continuously presents a menu to the user until a choice is made to exit the application.
+# - Add a new task to the list.
+# - Remove an existing task from the list.
+# - List all current tasks.
+# - Exit the application.
 # 
-# Functions:
-#     main() -> None
-#         The main entry point of the To-Do application. It initializes an instance of the TaskManager class and orchestrates a command-line interface for user interaction. The function manages a loop that displays menu options and handles user input accordingly. Based on the user's selection, it calls corresponding methods from the TaskManager to facilitate task management.
+# User input is taken via standard input, and based on the input, the script
+# calls appropriate methods of the TaskManager instance. If an invalid choice
+# is entered, the user is prompted to try again.
 # 
-#         Parameters:
-#             None
+# This design separates the user interface logic from the task management logic,
+# which is encapsulated within the TaskManager class defined elsewhere in the
+# project.
 # 
-#         Returns:
-#             None
+# Function Descriptions:
+# --------------------
+# main():
+#     - Creates an instance of TaskManager.
+#     - Repeatedly displays a menu and prompts the user for choices.
+#     - Calls TaskManager methods to manipulate or display tasks based on user input.
+#     - Exits when the user selects the exit option.
 # 
-#         Usage Example:
-#             Upon execution, the program displays a menu prompt to the user:
-#             
-#             TODO App
-#             1. Add Task
-#             2. Remove Task
-#             3. List Tasks
-#             4. Exit
-#             
-#             Users may enter their choice to manage tasks appropriately.
+# Note:
+# -----
+# This script assumes that the TaskManager class has the following methods:
+# - add_task(task): Adds a task to the task list.
+# - remove_task(task): Removes a specified task from the list.
+# - list_tasks(): Displays all current tasks.
 # 
-# Error Handling:
-#     The main function includes basic error handling for user input. If the user selects an option that does not correspond to the provided menu choices, an error message is displayed, prompting the user to try again.
-# 
-# Initialization:
-#     The TaskManager instance is initialized at the beginning of the main() function. This instance is utilized to manage tasks throughout the application's lifecycle.
-# 
-# Termination:
-#     The application will terminate when the user selects the option to exit. Before exiting, a message confirming the exit will be displayed to the user.
+# Since the class definitions are imported from external files, their internal
+# implementations are not included in this script but are essential for the
+# correct operation of the main interface.
 # """
 
 from task_manager import TaskManager
 
 
 def main():
-    """    
-Main entry point of the TODO application.
+    """def main():
+    ""\"
+    Entry point for the TODO application.
 
-This function initializes an instance of the TaskManager class and presents 
-a command-line interface to the user for managing tasks. The user can add, 
-remove, and list tasks through a menu-driven interface. The function 
-continues to run in a loop until the user chooses to exit the application.
+    Initializes the TaskManager instance and presents a menu-driven interface
+    that allows users to add, remove, list tasks, or exit the application.
 
-Parameters:
-    None
+    Parameters:
+        None
 
-Returns:
-    None
+    Returns:
+        None
 
-Usage Example:
-    When executed, the function will display a menu to the user:
-    
-    TODO App
-    1. Add Task
-    2. Remove Task
-    3. List Tasks
-    4. Exit
+    Usage example:
+        Run the script from the command line:
+        python main.py
 
-    The user can enter their choice to manage tasks accordingly.
-"""
+        The interactive menu will be displayed, and the user can input choices
+        to manage tasks accordingly.
+    """
     manager = TaskManager()
     while True:
         print('\nTODO App')

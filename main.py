@@ -127,6 +127,8 @@ def process_node(node, project_root, dependencies):
     # Convert overall documentation into a comment block
     overall_doc_comment = "\n".join([f"# {line}" for line in overall_doc.splitlines()])
 
+    func_documented = {}
+
     def generate_docstring(func_node):
         """Generate a basic docstring for a function node."""
         func_name = func_node.name
@@ -150,6 +152,7 @@ def process_node(node, project_root, dependencies):
         print(f"Time taken for {node} function docstring: {elapsed_time:.2f} seconds")
         history.append(response_func.choices[0].message)
         doc = f'"""{response_func.choices[0].message.content.strip()}"""'
+        func_documented[func_name] = response_func.choices[0].message.content.strip()
         time.sleep(20)
         return doc
 
@@ -197,26 +200,25 @@ def process_node(node, project_root, dependencies):
         for parent, functions in dependents.items():
             func_summaries_for_parent = {}
             for func in functions:
-                func_prompt = (
-                    f"For the file {node}"
-                    f"Generate a Python docstring for this function {func} that explains its purpose, lists all parameters with types and descriptions, specifies the return value, and includes a usage example. Follow PEP 257 standards."
-                )
-                history.append({
-                    "role": "user",
-                    "content": func_prompt
-                })
-                start_time = time.time()
-                response_func = client.chat.completions.create(
-                    model="gpt-4.1-nano",
-                    messages=history
-                )
-                end_time = time.time()
-                elapsed_time = end_time - start_time
-                print(f"Time taken for {node} function dependency docstring: {elapsed_time:.2f} seconds")
-                history.append(response_func.choices[0].message)
-                summary_text = response_func.choices[0].message.content.strip()
-                func_summaries_for_parent[func] = summary_text
-                time.sleep(30)
+                # func_prompt = (
+                #     f"For the file {node}"
+                #     f"Generate a Python docstring for this function {func} that explains its purpose, lists all parameters with types and descriptions, specifies the return value, and includes a usage example. Follow PEP 257 standards."
+                # )
+                # history.append({
+                #     "role": "user",
+                #     "content": func_prompt
+                # })
+                # start_time = time.time()
+                # response_func = client.chat.completions.create(
+                #     model="gpt-4.1-nano",
+                #     messages=history
+                # )
+                # end_time = time.time()
+                # elapsed_time = end_time - start_time
+                # print(f"Time taken for {node} function dependency docstring: {elapsed_time:.2f} seconds")
+                # history.append(response_func.choices[0].message)
+                # summary_text = response_func.choices[0].message.content.strip()
+                func_summaries_for_parent[func] = func_documented.get(func)
             if node_function_summaries.get(parent) is None:
                 node_function_summaries[parent] = func_summaries_for_parent
             else:
@@ -283,7 +285,7 @@ def main():
                 net.save_graph(f'{project_root}.html')
         print(f"Completed processing level {level}.")
         print("Agents sleeping for 60 seconds to avoid rate limits.")
-        time.sleep(60)
+        time.sleep(30)
 
     # Save final graph
     

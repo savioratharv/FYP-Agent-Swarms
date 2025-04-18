@@ -88,8 +88,8 @@
                   
 
                   // parsing and collecting nodes and edges from the python
-                  nodes = new vis.DataSet([{"color": "green", "id": "storage.py", "label": "storage.py", "shape": "dot", "size": 10}, {"color": "orange", "id": "task_manager.py", "label": "task_manager.py", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "main.py", "label": "main.py", "shape": "dot", "size": 10}, {"color": "green", "id": "utils.py", "label": "utils.py", "shape": "dot", "size": 10}]);
-                  edges = new vis.DataSet([{"arrows": "to", "from": "storage.py", "imported_functions": ["load_tasks", "save_tasks"], "to": "task_manager.py", "width": 1}, {"arrows": "to", "from": "task_manager.py", "imported_functions": ["TaskManager"], "to": "main.py", "width": 1}, {"arrows": "to", "from": "utils.py", "imported_functions": ["display_tasks"], "to": "task_manager.py", "width": 1}]);
+                  nodes = new vis.DataSet([{"color": "green", "id": "storage.py", "label": "storage.py", "shape": "dot", "size": 10}, {"color": "green", "id": "task_manager.py", "label": "task_manager.py", "shape": "dot", "size": 10}, {"color": "green", "id": "main.py", "label": "main.py", "shape": "dot", "size": 10}, {"color": "green", "id": "utils.py", "label": "utils.py", "shape": "dot", "size": 10}]);
+                  edges = new vis.DataSet([{"arrows": "to", "from": "storage.py", "imported_functions": ["save_tasks", "load_tasks"], "to": "task_manager.py", "width": 1}, {"arrows": "to", "from": "task_manager.py", "imported_functions": ["TaskManager"], "to": "main.py", "width": 1}, {"arrows": "to", "from": "utils.py", "imported_functions": ["display_tasks"], "to": "task_manager.py", "width": 1}]);
 
                   nodeColors = {};
                   allNodes = nodes.get({ returnType: "Object" });
